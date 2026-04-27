@@ -17,32 +17,85 @@ describe("forgeweave CLI skeleton", () => {
     expect(renderVersion()).toBe("forgeweave 0.0.0");
   });
 
-  it("handles --help as a successful smoke command", () => {
+  it("handles --help as a successful smoke command", async () => {
     const stdout = vi.fn();
     const stderr = vi.fn();
 
-    expect(runCli(["--help"], { stdout, stderr })).toBe(0);
+    await expect(runCli(["--help"], { stdout, stderr })).resolves.toBe(0);
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Usage: forgeweave"));
     expect(stderr).not.toHaveBeenCalled();
   });
 
-  it("runs init in dry-run mode against the ACC fixture", () => {
+  it("runs init in dry-run mode against the ACC fixture", async () => {
     const stdout = vi.fn();
     const stderr = vi.fn();
 
-    expect(runCli(["init", "--project-root", accFixtureRoot, "--dry-run"], { stdout, stderr })).toBe(0);
+    await expect(runCli(["init", "--project-root", accFixtureRoot, "--dry-run"], { stdout, stderr })).resolves.toBe(0);
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("ForgeWeave init completed for acc-fixture"));
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Mode: dry-run"));
     expect(stderr).not.toHaveBeenCalled();
   });
 
-  it("runs init in dry-run mode against the minimal fixture", () => {
+  it("runs init in dry-run mode against the minimal fixture", async () => {
     const stdout = vi.fn();
     const stderr = vi.fn();
 
-    expect(runCli(["init", "--project-root", minimalFixtureRoot, "--dry-run"], { stdout, stderr })).toBe(0);
+    await expect(runCli(["init", "--project-root", minimalFixtureRoot, "--dry-run"], { stdout, stderr })).resolves.toBe(0);
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("minimal-project-fixture"));
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("GenericProjectAdapter"));
+    expect(stderr).not.toHaveBeenCalled();
+  });
+
+  it("runs generic.review and inspects persisted artifacts", async () => {
+    const { mkdtempSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const outputRoot = mkdtempSync(join(tmpdir(), "forgeweave-cli-review-"));
+    const stdout = vi.fn();
+    const stderr = vi.fn();
+
+    await expect(
+      runCli(
+        ["run", "generic.review", "--project-root", accFixtureRoot, "--output-root", outputRoot, "--run-id", "cli-run"],
+        { stdout, stderr }
+      )
+    ).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Status: waiting-review"));
+
+    await expect(runCli(["status", "--output-root", outputRoot, "--run-id", "cli-run"], { stdout, stderr })).resolves.toBe(0);
+    await expect(runCli(["artifacts", "--output-root", outputRoot, "--run-id", "cli-run"], { stdout, stderr })).resolves.toBe(0);
+
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("review-findings"));
+    expect(stderr).not.toHaveBeenCalled();
+  });
+
+  it("approves and rejects review gates", async () => {
+    const { mkdtempSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const approveOutput = mkdtempSync(join(tmpdir(), "forgeweave-cli-review-"));
+    const rejectOutput = mkdtempSync(join(tmpdir(), "forgeweave-cli-review-"));
+    const stdout = vi.fn();
+    const stderr = vi.fn();
+
+    await runCli(
+      ["run", "generic.review", "--project-root", minimalFixtureRoot, "--output-root", approveOutput, "--run-id", "approve-run"],
+      { stdout, stderr }
+    );
+    await expect(runCli(["review", "approve", "--output-root", approveOutput, "--run-id", "approve-run"], { stdout, stderr })).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Review decision: approved"));
+
+    await runCli(
+      ["run", "generic.review", "--project-root", minimalFixtureRoot, "--output-root", rejectOutput, "--run-id", "reject-run"],
+      { stdout, stderr }
+    );
+    await expect(
+      runCli(
+        ["review", "reject", "--output-root", rejectOutput, "--run-id", "reject-run", "--reason", "Needs more detail"],
+        { stdout, stderr }
+      )
+    ).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Review decision: rejected (Needs more detail)"));
     expect(stderr).not.toHaveBeenCalled();
   });
 });

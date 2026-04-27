@@ -58,11 +58,11 @@
 | FW-P2-008 | Review Artifacts | 定義 review-findings / delivery-summary schema | FW-P2-002 | findings、severity、risks、next actions | Committed |
 | FW-P2-009 | Runner | 實作 workflow runner skeleton | FW-P2-001, FW-P2-003, FW-P2-006 | system/agent/human-review steps lifecycle | Committed |
 | FW-P2-010 | Workflow | 定義 `generic.review` workflow | FW-P2-008, FW-P2-009 | load project → context → review-findings → review gate | Committed |
-| FW-P2-011 | Review Gate | 實作 CLI review approve/reject | FW-P2-009 | reject with reason 可保存 | Todo |
-| FW-P2-012 | CLI Inspect | 實作 run/status/artifacts CLI | FW-P2-005, FW-P2-010 | 可查 run、artifact、failed step | Todo |
+| FW-P2-011 | Review Gate | 實作 CLI review approve/reject | FW-P2-009 | reject with reason 可保存 | Committed |
+| FW-P2-012 | CLI Inspect | 實作 run/status/artifacts CLI | FW-P2-005, FW-P2-010 | 可查 run、artifact、failed step | Committed |
 | FW-P2-013 | Safety | 強制 Phase 2 read-only isolation | FW-P2-009 | review workflow 不可寫檔 | Committed |
-| FW-P2-014 | ACC Review | ACC fixture generic.review E2E | FW-P2-012, FW-P2-013 | artifacts + review decision | Todo |
-| FW-P2-015 | Second Review | 第二專案 generic.review E2E | FW-P2-012, FW-P2-013 | 不依賴 ACC-specific logic | Todo |
+| FW-P2-014 | ACC Review | ACC fixture generic.review E2E | FW-P2-012, FW-P2-013 | artifacts + review decision | Committed |
+| FW-P2-015 | Second Review | 第二專案 generic.review E2E | FW-P2-012, FW-P2-013 | 不依賴 ACC-specific logic | Committed |
 
 ## Phase 3 — Feature Delivery MVP
 

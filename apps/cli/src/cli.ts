@@ -1,5 +1,5 @@
 import { VERSION } from "./version.js";
-import { runProjectOnboarding } from "@forgeweave/core";
+import { createLocalWorkflowStore, recordReviewDecision, runProjectOnboarding, runWorkflow } from "@forgeweave/core";
 
 export type CliIo = {
   stdout: (message: string) => void;
@@ -13,6 +13,10 @@ Usage: forgeweave [command]
 Commands:
   help       Show this help message
   init       Run project onboarding and print an onboarding report summary
+  run        Run a workflow, for example: run generic.review
+  status     Inspect a persisted workflow run
+  artifacts  List persisted workflow artifacts for a run
+  review     Approve or reject a waiting manual review gate
   version    Show the CLI version
 
 Options:
@@ -22,7 +26,13 @@ Options:
 Init options:
   --project-root <path>  Project root to inspect (defaults to current working directory)
   --dry-run              Do not write onboarding artifacts (default)
-  --write                Write onboarding artifacts under .forgeweave/onboarding`;
+  --write                Write onboarding artifacts under .forgeweave/onboarding
+
+Review workflow options:
+  --project-root <path>  Project root to inspect (defaults to current working directory)
+  --output-root <path>   Local ForgeWeave artifact output root
+  --run-id <id>          Run id to create or inspect
+  --reason <text>        Required rejection reason`;
 
 export function renderHelp(): string {
   return helpText;
@@ -62,10 +72,90 @@ function renderInitSummary(argv: readonly string[]): string {
   ].join("\n");
 }
 
-export function runCli(
+function requiredOption(argv: readonly string[], option: string): string {
+  const value = optionValue(argv, option);
+  if (value === undefined || value.trim().length === 0) {
+    throw new Error(`Missing required option: ${option}`);
+  }
+  return value;
+}
+
+async function renderRunSummary(argv: readonly string[]): Promise<string> {
+  const [workflowId] = argv;
+  if (workflowId !== "generic.review") {
+    throw new Error(`Unsupported workflow: ${workflowId ?? "<missing>"}`);
+  }
+
+  const projectRoot = optionValue(argv, "--project-root") ?? process.cwd();
+  const outputRoot = requiredOption(argv, "--output-root");
+  const runId = optionValue(argv, "--run-id");
+  const result = await runWorkflow({ projectRoot, outputRoot, runId });
+
+  return [
+    `Run: ${result.run.runId}`,
+    `Workflow: ${result.run.workflowId}`,
+    `Status: ${result.run.status}`,
+    `Artifacts: ${result.artifacts.map((artifact) => artifact.artifactId).join(", ")}`,
+    `Review decision: ${result.reviewDecision.status}`
+  ].join("\n");
+}
+
+function renderStatusSummary(argv: readonly string[]): string {
+  const outputRoot = requiredOption(argv, "--output-root");
+  const runId = requiredOption(argv, "--run-id");
+  const store = createLocalWorkflowStore(outputRoot);
+  const run = store.loadRun(runId);
+  const steps = store.loadSteps(runId);
+  const reviewDecision = store.loadReviewDecision(runId);
+
+  return [
+    `Run: ${run.runId}`,
+    `Workflow: ${run.workflowId}`,
+    `Status: ${run.status}`,
+    `Steps: ${steps.map((step) => `${step.stepId}:${step.status}`).join(", ")}`,
+    `Review decision: ${reviewDecision.status}${reviewDecision.reason ? ` (${reviewDecision.reason})` : ""}`
+  ].join("\n");
+}
+
+function renderArtifactsSummary(argv: readonly string[]): string {
+  const outputRoot = requiredOption(argv, "--output-root");
+  const runId = requiredOption(argv, "--run-id");
+  const artifacts = createLocalWorkflowStore(outputRoot).listArtifacts(runId);
+
+  return [
+    `Run: ${runId}`,
+    `Artifacts: ${artifacts.length}`,
+    ...artifacts.map((artifact) => `${artifact.artifactId} ${artifact.kind} ${artifact.status}`)
+  ].join("\n");
+}
+
+function renderReviewSummary(argv: readonly string[]): string {
+  const [action] = argv;
+  if (action !== "approve" && action !== "reject") {
+    throw new Error(`Unsupported review action: ${action ?? "<missing>"}`);
+  }
+
+  const outputRoot = requiredOption(argv, "--output-root");
+  const runId = requiredOption(argv, "--run-id");
+  const reason = optionValue(argv, "--reason");
+  const result = recordReviewDecision({
+    outputRoot,
+    runId,
+    decision: action,
+    reason
+  });
+
+  return [
+    `Run: ${runId}`,
+    `Status: ${result.runStatus}`,
+    `Review decision: ${result.decision.status}${result.decision.reason ? ` (${result.decision.reason})` : ""}`
+  ].join("\n");
+}
+
+export async function runCli(
   argv: readonly string[] = process.argv.slice(2),
   io: CliIo = { stdout: console.log, stderr: console.error },
-): number {
+): Promise<number> {
   const [command] = argv;
 
   if (command === undefined || command === "help" || command === "--help" || command === "-h") {
@@ -81,6 +171,46 @@ export function runCli(
   if (command === "init") {
     try {
       io.stdout(renderInitSummary(argv.slice(1)));
+      return 0;
+    } catch (error) {
+      io.stderr(error instanceof Error ? error.message : String(error));
+      return 1;
+    }
+  }
+
+  if (command === "run") {
+    try {
+      io.stdout(await renderRunSummary(argv.slice(1)));
+      return 0;
+    } catch (error) {
+      io.stderr(error instanceof Error ? error.message : String(error));
+      return 1;
+    }
+  }
+
+  if (command === "status") {
+    try {
+      io.stdout(renderStatusSummary(argv.slice(1)));
+      return 0;
+    } catch (error) {
+      io.stderr(error instanceof Error ? error.message : String(error));
+      return 1;
+    }
+  }
+
+  if (command === "artifacts") {
+    try {
+      io.stdout(renderArtifactsSummary(argv.slice(1)));
+      return 0;
+    } catch (error) {
+      io.stderr(error instanceof Error ? error.message : String(error));
+      return 1;
+    }
+  }
+
+  if (command === "review") {
+    try {
+      io.stdout(renderReviewSummary(argv.slice(1)));
       return 0;
     } catch (error) {
       io.stderr(error instanceof Error ? error.message : String(error));

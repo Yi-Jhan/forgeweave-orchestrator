@@ -68,3 +68,8 @@ export {
 export {
   genericReviewWorkflow
 } from "./workflows/generic-review.js";
+export {
+  recordReviewDecision,
+  type ReviewDecisionInput,
+  type ReviewDecisionResult
+} from "./review-decision.js";

@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 2 — Review-first MVP
-- Task：FW-P2-007 / FW-P2-009 / FW-P2-010 / FW-P2-013 — mock runtime、runner、generic.review、read-only guard（完成）
+- Task：FW-P2-011 / FW-P2-012 / FW-P2-014 / FW-P2-015 — CLI review gate、inspect commands、fixture E2E（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P2-011 / FW-P2-012 / FW-P2-014 / FW-P2-015
+
+- 目標：提供 CLI `run generic.review`、`status`、`artifacts`、`review approve`、`review reject --reason`，並以 ACC fixture 與 minimal-project fixture 驗證 read-only review E2E。
+- Acceptance criteria：CLI 可啟動 `generic.review` 並產出 run / artifacts；status 可查 run、steps、review decision；artifacts 可列出 persisted artifacts；approve / reject / reject reason 可保存；ACC fixture 與 minimal-project fixture 都可跑，不依賴 ACC-specific runner logic。
+- 預期修改檔案：`apps/cli/src/cli.ts`、`apps/cli/src/main.ts`、`apps/cli/src/cli.test.ts`、`packages/core/src/index.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`packages/core/src/review-decision.ts`、`packages/core/src/review-decision.test.ts`。
+- Non-goals：不實作 Phase 3 patch mode；不支援 workspace-write；不建立 TUI/WebUI；不自動修改外部 ACC repo。
+- Checks / tests：`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/cli test`；`pnpm --filter @forgeweave/core build`；`pnpm --filter @forgeweave/cli build`；`pnpm test:smoke`；`pnpm build`。
+- 風險與避免方式：避免 CLI 預設寫入 fixture project；Phase 2 run command 必須明確提供 `--output-root`，測試使用 temp output root。
 
 ## Task Execution Plan — FW-P2-007 / FW-P2-009 / FW-P2-010 / FW-P2-013
 
@@ -158,7 +168,11 @@
 - FW-P2-008：新增 review-findings 與 delivery-summary schema、type 與 validation helper。
 - FW-P2-009：新增 workflow runner skeleton，支援 system、agent、human-review step lifecycle。
 - FW-P2-010：新增 `generic.review` workflow definition，串接 project context、review findings 與 manual review gate。
+- FW-P2-011：新增 CLI `review approve` / `review reject --reason`，可保存 review decision 並更新 run status。
+- FW-P2-012：新增 CLI `run generic.review`、`status`、`artifacts` inspect commands。
 - FW-P2-013：新增 Phase 2 read-only guard，阻擋 workspace-write policy 或非 read-only step。
+- FW-P2-014：ACC fixture `generic.review` CLI E2E 通過，產出 artifacts 與 pending review decision。
+- FW-P2-015：minimal-project fixture `generic.review` CLI / review decision E2E 通過，不依賴 ACC-specific logic。
 - FW-P1-001：新增 project manifest schema、type 與 validation helper。
 - FW-P1-002：新增 manifest finder / loader / normalizer，支援 fixture YAML manifest。
 - FW-P1-003：新增 `forgeweave init` CLI onboarding flow，支援 `--project-root`、`--dry-run`、`--write`。
@@ -262,6 +276,12 @@
 | `pnpm --filter @forgeweave/core build` | Pass | local store export build 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | `generic.review` ACC/minimal fixture runner tests 與 read-only guard test 通過。 |
 | `pnpm --filter @forgeweave/core build` | Pass | mock runtime、runner、workflow exports build 通過。 |
+| `pnpm --filter @forgeweave/core test` | Pass | review decision approve/reject/reject reason tests 通過。 |
+| `pnpm --filter @forgeweave/cli test` | Pass | CLI run/status/artifacts/review gate fixture tests 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | review decision export build 通過。 |
+| `pnpm --filter @forgeweave/cli build` | Pass | async CLI entrypoint build 通過。 |
+| `pnpm test:smoke` | Pass | CLI help/version/init smoke checks 通過，help 已列出 Phase 2 commands。 |
+| `pnpm build` | Pass | contracts、core、CLI workspace build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
 | `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
@@ -318,7 +338,11 @@
 - [x] FW-P2-008 acceptance criteria
 - [x] FW-P2-009 acceptance criteria
 - [x] FW-P2-010 acceptance criteria
+- [x] FW-P2-011 acceptance criteria
+- [x] FW-P2-012 acceptance criteria
 - [x] FW-P2-013 acceptance criteria
+- [x] FW-P2-014 acceptance criteria
+- [x] FW-P2-015 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -353,11 +377,12 @@
 
 ## Next Task
 
-- FW-P2-011 / FW-P2-012：CLI approve/reject review gate 與 run/status/artifacts inspect commands
+- Phase 2 final gate cleanup：更新 phase gate / focus 並停止
 
 ## Commit Message
 
 ```text
+phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store
 phase-2: FW-P2-contracts add review workflow contracts
