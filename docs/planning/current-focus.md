@@ -2,7 +2,7 @@
 
 ## Active Phase
 
-Phase 3 — Feature Delivery MVP（Phase 3B in progress）
+Phase 3 — Feature Delivery MVP（completed）
 
 ## Active Validation Mode
 
@@ -20,10 +20,10 @@ fixture
 
 ## 下一步
 
-Phase 2 Review-first MVP 已完成。Phase 3A Controlled Bug-fix / Patch-first 已完成，目前進行 Phase 3B Small New-feature / Enhancement。
+Phase 3 Feature Delivery MVP 已完成並停止。Phase 4 Runtime / State / Workspace Hardening + ACC Migration Gate 需由使用者明確啟動。
 
 ```text
-FW-P3B-003：generic.new-feature workflow
+docs/prompts/run-phase-4-autonomous.md
 ```
 
-Phase 3 完成後停止，不自動進入 Phase 4。
+本次執行停止於 Phase 3，不自動進入 Phase 4。

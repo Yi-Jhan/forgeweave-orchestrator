@@ -1,10 +1,13 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { extname, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, extname, resolve } from "node:path";
 
 import type {
   BugBrief,
   DeliverySummary,
+  FeatureSpec,
+  ImplementationPlan,
   PatchPlan,
+  RequirementBrief,
   ReviewFindings,
   WorkflowArtifact,
   WorkflowDefinition,
@@ -18,10 +21,12 @@ import { loadOrGenerateProjectManifest } from "./manifest.js";
 import { createMockRuntimeProvider } from "./mock-runtime-provider.js";
 import { buildOnboardingReport } from "./onboarding-report.js";
 import type { AgentRuntimeProvider } from "./runtime-provider.js";
+import { evaluateSmallScope } from "./small-scope-guard.js";
 import { transitionRun, transitionStep, type WorkflowRunState, type WorkflowStepState } from "./state-machine.js";
 import { defaultFilePolicy, evaluateFilePolicy, resolveInside } from "./write-safety.js";
 import { createControlledWorkdir, type ControlledWorkdir } from "./workdir-manager.js";
 import { genericBugFixWorkflow } from "./workflows/generic-bug-fix.js";
+import { genericNewFeatureWorkflow } from "./workflows/generic-new-feature.js";
 import { genericReviewWorkflow } from "./workflows/generic-review.js";
 
 export type RunWorkflowOptions = {
@@ -296,6 +301,84 @@ function createPatchReviewFindings(runId: string, targetFile: string): WorkflowA
   return artifact(runId, "review-findings", "validate", payload as unknown as Record<string, unknown>);
 }
 
+function chooseFeatureTargetFile(workdirRoot: string, requested?: string): string {
+  if (requested !== undefined) return requested;
+  if (existsSync(resolveInside(workdirRoot, "fixtures/modern-target"))) return "fixtures/modern-target/feature-note.ts";
+  if (existsSync(resolveInside(workdirRoot, "src"))) return "src/feature-helper.ts";
+  return "README.feature.md";
+}
+
+function featureFileContent(path: string, requirement: string): string {
+  const safeRequirement = requirement.replace(/\s+/g, " ").trim();
+  if (extname(path) === ".md") {
+    return `# ForgeWeave Feature\n\n${safeRequirement}\n`;
+  }
+  return [
+    "export function forgeweaveFeatureNote(): string {",
+    `  return ${JSON.stringify(safeRequirement)};`,
+    "}",
+    ""
+  ].join("\n");
+}
+
+function createRequirementBrief(runId: string, requirement: string, targetFiles: string[]): WorkflowArtifact {
+  const payload: RequirementBrief = {
+    schemaVersion: "1.0.0",
+    kind: "requirement-brief",
+    title: requirement,
+    description: requirement,
+    targetFiles,
+    acceptanceCriteria: ["Feature patch is captured as a reviewable diff.", "Validation commands are summarized."],
+    assumptions: ["Fixture workflow uses deterministic feature generation."]
+  };
+  return artifact(runId, "requirement-brief", "spec-plan", payload as unknown as Record<string, unknown>);
+}
+
+function createFeatureSpec(runId: string, requirement: string, targetFiles: string[]): WorkflowArtifact {
+  const payload: FeatureSpec = {
+    schemaVersion: "1.0.0",
+    kind: "feature-spec",
+    scope: "small",
+    summary: requirement,
+    targetFiles,
+    acceptanceCriteria: ["New helper file exists in the controlled workdir.", "README includes a feature delivery note."],
+    assumptions: ["No live project integration is required for fixture validation."],
+    nonGoals: ["No multi-module refactor.", "No ACC migration."]
+  };
+  return artifact(runId, "feature-spec", "spec-plan", payload as unknown as Record<string, unknown>);
+}
+
+function createImplementationPlan(runId: string, targetFiles: string[]): WorkflowArtifact {
+  const payload: ImplementationPlan = {
+    schemaVersion: "1.0.0",
+    kind: "implementation-plan",
+    targetFiles,
+    steps: ["Create a small feature helper", "Update README delivery note", "Capture diff", "Run manifest-approved validation"],
+    validationCommands: ["lint", "test", "build"],
+    risks: ["Fixture-only validation does not prove live integration."]
+  };
+  return artifact(runId, "implementation-plan", "spec-plan", payload as unknown as Record<string, unknown>);
+}
+
+function createFeatureReviewFindings(runId: string, targetFile: string): WorkflowArtifact {
+  const payload: ReviewFindings = {
+    schemaVersion: "1.0.0",
+    kind: "review-findings",
+    summary: `Mock feature review completed for ${targetFile}.`,
+    findings: [
+      {
+        id: "FW-P3-F-001",
+        severity: "info",
+        title: "Feature patch captured for review",
+        detail: "The workflow produced requirement, spec, plan, diff, and validation artifacts before review."
+      }
+    ],
+    risks: ["Fixture feature does not represent live ACC source."],
+    nextActions: ["Approve or reject the manual feature review gate."]
+  };
+  return artifact(runId, "review-findings", "validate", payload as unknown as Record<string, unknown>);
+}
+
 async function runGenericBugFixWorkflow(options: RunWorkflowOptions, workflow: WorkflowDefinition): Promise<RunWorkflowResult> {
   const runId = options.runId ?? nextRunId();
   const store = createLocalWorkflowStore(options.outputRoot);
@@ -391,11 +474,135 @@ async function runGenericBugFixWorkflow(options: RunWorkflowOptions, workflow: W
   };
 }
 
+async function runGenericNewFeatureWorkflow(options: RunWorkflowOptions, workflow: WorkflowDefinition): Promise<RunWorkflowResult> {
+  const runId = options.runId ?? nextRunId();
+  const store = createLocalWorkflowStore(options.outputRoot);
+  const projectRoot = resolve(options.projectRoot);
+  let run: WorkflowRunState = { runId, workflowId: workflow.id, status: "pending" };
+  const steps: WorkflowStepState[] = workflow.steps.map((step) => ({ stepId: step.id, status: "pending" }));
+  const artifacts: WorkflowArtifact[] = [];
+  const manifest = loadOrGenerateProjectManifest(projectRoot).manifest;
+  const requirement = options.brief ?? "Add a small deterministic feature helper.";
+  const featureFilePolicy = { ...defaultFilePolicy, allowNewFiles: true };
+
+  run = transitionRun(run, "running");
+  store.saveRun(run);
+  store.appendEvent(event(runId, "run.started", { workflowId: workflow.id }));
+
+  startStep(store, runId, steps, "load-project");
+  saveArtifact(store, artifacts, createContextArtifact(runId, projectRoot));
+  completeStep(store, runId, steps, "load-project");
+
+  startStep(store, runId, steps, "prepare-workdir");
+  const workdir = createControlledWorkdir({
+    projectRoot,
+    outputRoot: options.outputRoot,
+    runId,
+    validationMode: manifest.validation.mode,
+    filePolicy: featureFilePolicy
+  });
+  saveArtifact(store, artifacts, createWorkdirArtifact(runId, workdir));
+  completeStep(store, runId, steps, "prepare-workdir");
+
+  const targetFile = chooseFeatureTargetFile(workdir.workdirRoot, options.targetFile);
+  const readmeFile = existsSync(resolveInside(workdir.workdirRoot, "README.md")) ? "README.md" : undefined;
+  const targetFiles = readmeFile === undefined ? [targetFile] : [targetFile, readmeFile];
+  const requirementBrief: RequirementBrief = {
+    schemaVersion: "1.0.0",
+    kind: "requirement-brief",
+    title: requirement,
+    description: requirement,
+    targetFiles,
+    acceptanceCriteria: ["Feature patch is captured as a reviewable diff.", "Validation commands are summarized."],
+    assumptions: ["Fixture workflow uses deterministic feature generation."]
+  };
+  const scope = evaluateSmallScope({ requirement: requirementBrief, filePolicy: featureFilePolicy, allowNewFiles: true });
+  if (!scope.allowed) {
+    throw new Error(`Feature request rejected by small-scope guard: ${scope.rejectReason}`);
+  }
+
+  const filePolicy = evaluateFilePolicy(featureFilePolicy, [
+    { path: targetFile, operation: "create" },
+    ...(readmeFile === undefined ? [] : [{ path: readmeFile, operation: "modify" as const }])
+  ]);
+  if (!filePolicy.allowed) {
+    throw new Error(`Feature patch rejected by file policy: ${filePolicy.rejections.join("; ")}`);
+  }
+
+  startStep(store, runId, steps, "spec-plan");
+  saveArtifact(store, artifacts, createRequirementBrief(runId, requirement, targetFiles));
+  saveArtifact(store, artifacts, createFeatureSpec(runId, requirement, targetFiles));
+  saveArtifact(store, artifacts, createImplementationPlan(runId, targetFiles));
+  completeStep(store, runId, steps, "spec-plan");
+
+  startStep(store, runId, steps, "apply-patch");
+  const before = snapshotFiles(workdir.workdirRoot, targetFiles);
+  const targetPath = resolveInside(workdir.workdirRoot, targetFile);
+  mkdirSync(dirname(targetPath), { recursive: true });
+  writeFileSync(targetPath, featureFileContent(targetFile, requirement));
+  if (readmeFile !== undefined) {
+    const readmePath = resolveInside(workdir.workdirRoot, readmeFile);
+    const readme = readFileSync(readmePath, "utf8");
+    writeFileSync(readmePath, `${readme.trimEnd()}\n\nForgeWeave feature note: ${requirement}\n`);
+  }
+  const after = snapshotFiles(workdir.workdirRoot, targetFiles);
+  const changeSet = captureFileChangeSet({
+    rootDir: workdir.workdirRoot,
+    before,
+    after,
+    rationale: requirement,
+    risk: "Low; small-scope fixture feature inside allowlist."
+  });
+  saveArtifact(store, artifacts, artifact(runId, "file-change-set", "apply-patch", changeSet as unknown as Record<string, unknown>));
+  completeStep(store, runId, steps, "apply-patch");
+
+  startStep(store, runId, steps, "validate");
+  const commandSummary = runValidationCommandSummary({
+    manifest,
+    cwd: workdir.workdirRoot,
+    commands: options.validationCommands
+  });
+  saveArtifact(store, artifacts, artifact(runId, "command-summary", "validate", commandSummary as unknown as Record<string, unknown>));
+  saveArtifact(store, artifacts, createFeatureReviewFindings(runId, targetFile));
+  completeStep(store, runId, steps, "validate");
+
+  startStep(store, runId, steps, "review-gate");
+  const reviewDecision = { runId, status: "pending" as const };
+  const deliverySummary = createDeliverySummaryArtifact(
+    runId,
+    artifacts.map((item) => item.artifactId),
+    "waiting-review",
+    { status: "pending" },
+    "Generic new-feature patch is waiting for manual review."
+  );
+  saveArtifact(store, artifacts, deliverySummary);
+  store.saveReviewDecision(reviewDecision);
+  store.appendEvent(event(runId, "review.requested", {}, "review-gate", deliverySummary.artifactId));
+  const reviewStepIndex = steps.findIndex((step) => step.stepId === "review-gate");
+  steps[reviewStepIndex] = transitionStep(steps[reviewStepIndex], "waiting-review");
+  store.saveStep(runId, steps[reviewStepIndex]);
+  run = transitionRun(run, "waiting-review");
+  store.saveRun(run);
+
+  return {
+    run,
+    steps,
+    artifacts,
+    reviewDecision: {
+      status: "pending"
+    },
+    store
+  };
+}
+
 export async function runWorkflow(options: RunWorkflowOptions): Promise<RunWorkflowResult> {
   const workflow = options.workflow ?? genericReviewWorkflow;
 
   if (workflow.id === genericBugFixWorkflow.id) {
     return runGenericBugFixWorkflow(options, workflow);
+  }
+  if (workflow.id === genericNewFeatureWorkflow.id) {
+    return runGenericNewFeatureWorkflow(options, workflow);
   }
 
   return runReviewWorkflow(options, workflow);

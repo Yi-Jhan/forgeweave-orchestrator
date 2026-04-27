@@ -86,6 +86,9 @@ export {
   genericBugFixWorkflow
 } from "./workflows/generic-bug-fix.js";
 export {
+  genericNewFeatureWorkflow
+} from "./workflows/generic-new-feature.js";
+export {
   recordReviewDecision,
   type ReviewDecisionInput,
   type ReviewDecisionResult

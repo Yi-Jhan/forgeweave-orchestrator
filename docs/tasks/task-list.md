@@ -89,11 +89,11 @@
 | --- | --- | --- | --- | --- | --- |
 | FW-P3B-001 | Feature Contracts | 定義 requirement-brief / feature-spec / implementation-plan schema | FW-P3A-006 | small scope、assumptions、target files、acceptance criteria | Committed |
 | FW-P3B-002 | Scope Control | 實作 small-scope guard | FW-P3A-003, FW-P3B-001 | 過大 / 多模組需求會被阻擋或標風險 | Committed |
-| FW-P3B-003 | Workflow | 定義 `generic.new-feature` workflow | FW-P3B-001, FW-P3A-008 | requirement → spec/plan → patch → validate → review → summary | Todo |
-| FW-P3B-004 | Patch Mode | 支援 controlled new file + modify file patch mode | FW-P3A-007, FW-P3B-002 | 新增/修改檔案都在 allowlist 內 | Todo |
-| FW-P3B-005 | ACC Feature | ACC small new-feature CLI E2E | FW-P3B-003, FW-P3B-004 | validation + review gate | Todo |
-| FW-P3B-006 | Second Project | 第二專案 bug-fix/enhancement E2E | FW-P3B-003 | 驗證 core 不綁 ACC/Angular | Todo |
-| FW-P3B-007 | Regression | P2/P3 workflow regression suite | FW-P3B-005 | review / bug-fix / new-feature 均維持可跑 | Todo |
+| FW-P3B-003 | Workflow | 定義 `generic.new-feature` workflow | FW-P3B-001, FW-P3A-008 | requirement → spec/plan → patch → validate → review → summary | Committed |
+| FW-P3B-004 | Patch Mode | 支援 controlled new file + modify file patch mode | FW-P3A-007, FW-P3B-002 | 新增/修改檔案都在 allowlist 內 | Committed |
+| FW-P3B-005 | ACC Feature | ACC small new-feature CLI E2E | FW-P3B-003, FW-P3B-004 | validation + review gate | Committed |
+| FW-P3B-006 | Second Project | 第二專案 bug-fix/enhancement E2E | FW-P3B-003 | 驗證 core 不綁 ACC/Angular | Committed |
+| FW-P3B-007 | Regression | P2/P3 workflow regression suite | FW-P3B-005 | review / bug-fix / new-feature 均維持可跑 | Committed |
 
 ## Phase 4 — Runtime / State / Workspace Hardening + ACC Migration
 

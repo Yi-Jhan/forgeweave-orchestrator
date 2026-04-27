@@ -2,6 +2,7 @@ import { VERSION } from "./version.js";
 import {
   createLocalWorkflowStore,
   genericBugFixWorkflow,
+  genericNewFeatureWorkflow,
   recordReviewDecision,
   rerunRejectedStep,
   runProjectOnboarding,
@@ -93,7 +94,7 @@ function requiredOption(argv: readonly string[], option: string): string {
 
 async function renderRunSummary(argv: readonly string[]): Promise<string> {
   const [workflowId] = argv;
-  if (workflowId !== "generic.review" && workflowId !== "generic.bug-fix") {
+  if (workflowId !== "generic.review" && workflowId !== "generic.bug-fix" && workflowId !== "generic.new-feature") {
     throw new Error(`Unsupported workflow: ${workflowId ?? "<missing>"}`);
   }
 
@@ -104,7 +105,12 @@ async function renderRunSummary(argv: readonly string[]): Promise<string> {
     projectRoot,
     outputRoot,
     runId,
-    workflow: workflowId === "generic.bug-fix" ? genericBugFixWorkflow : undefined,
+    workflow:
+      workflowId === "generic.bug-fix"
+        ? genericBugFixWorkflow
+        : workflowId === "generic.new-feature"
+          ? genericNewFeatureWorkflow
+          : undefined,
     brief: optionValue(argv, "--brief"),
     targetFile: optionValue(argv, "--target-file")
   });

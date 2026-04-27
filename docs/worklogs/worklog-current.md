@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 3 — Feature Delivery MVP
-- Task：FW-P3B-001 / FW-P3B-002（完成）
+- Task：FW-P3B-003 / FW-P3B-004 / FW-P3B-005 / FW-P3B-006 / FW-P3B-007（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P3B-003 / FW-P3B-004 / FW-P3B-005 / FW-P3B-006 / FW-P3B-007
+
+- 目標：完成 Phase 3B small new-feature / enhancement 交付閉環，包含 `generic.new-feature` workflow、controlled new-file + modify-file patch mode、ACC fixture E2E、第二專案 fixture E2E 與 P2/P3 regression suite。
+- Acceptance criteria：`generic.new-feature` 可產生 requirement-brief、feature-spec、implementation-plan、file-change-set、command-summary、review-findings、delivery-summary；新增檔案與修改檔案都通過 allowlist；過大需求被 small-scope guard 阻擋；ACC fixture CLI E2E 可跑到 review gate；minimal-project bug-fix / new-feature E2E 可跑；regression suite 確認 generic.review / generic.bug-fix / generic.new-feature 均可跑。
+- 預期修改檔案：`packages/core/src/workflow-runner.ts`、`packages/core/src/index.ts`、`apps/cli/src/cli.ts`、`apps/cli/src/cli.test.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`、`docs/planning/current-focus.md`。
+- 預期新增檔案：`packages/core/src/workflows/generic-new-feature.ts`、`packages/core/src/generic-new-feature-workflow.test.ts`、`packages/core/src/workflow-regression.test.ts`。
+- Non-goals：不做大型 feature、多模組重構、ACC single-page migration、Phase 4 context-slice hardening 或 checkpoint resume。
+- Checks / tests：`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/cli test`；`pnpm --filter @forgeweave/core build`；`pnpm --filter @forgeweave/cli build`；`pnpm build`；`pnpm test`；`pnpm test:smoke`；`git diff --check`。
+- 風險與避免方式：new-feature patch 僅寫入 output root controlled workdir；fixture command 缺 package.json 時以 skipped command-summary 記錄；regression 使用 temp output roots 避免污染 repo。
 
 ## Task Execution Plan — FW-P3B-001 / FW-P3B-002
 
@@ -207,6 +217,11 @@
 
 ## Completed
 
+- FW-P3B-003：新增 `generic.new-feature` workflow，產出 requirement-brief、feature-spec、implementation-plan、file-change-set、command-summary、review-findings、delivery-summary。
+- FW-P3B-004：`generic.new-feature` 支援 controlled new-file + README modify patch mode，新增/修改檔案皆走 allowlist。
+- FW-P3B-005：ACC fixture `generic.new-feature` CLI E2E 通過。
+- FW-P3B-006：minimal-project fixture bug-fix / new-feature E2E 通過，驗證 core 不綁 ACC/Angular。
+- FW-P3B-007：新增 P2/P3 workflow regression suite，確認 review / bug-fix / new-feature 均可跑。
 - FW-P3B-001：新增 requirement-brief、feature-spec、implementation-plan contracts 與 validation tests。
 - FW-P3B-002：新增 small-scope guard，可阻擋過大、多檔、denylist 與 migration/refactor/redesign 類需求。
 - FW-P3A-010：新增 rejected run 的 targeted validate rerun，會帶入 reject reason 並產出新的 command-summary / rerun-summary artifacts。
@@ -331,6 +346,16 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm build` | Pass | contracts、core、CLI workspace build 通過。 |
+| `pnpm test` | Pass | 20 test files / 53 tests 通過，包含 P2/P3 regression suite。 |
+| `pnpm test:contract` | Pass | 4 contract test files / 12 tests 通過。 |
+| `pnpm test:cli` | Pass | 1 CLI test file / 9 tests 通過，包含 ACC/minimal Phase 3 E2E。 |
+| `pnpm test:smoke` | Pass | CLI help/version/init smoke 通過。 |
+| lint | N/A | root `package.json` 尚未定義 lint script。 |
+| `pnpm --filter @forgeweave/core test` | Pass | `generic.new-feature` 與 P2/P3 regression tests 通過。 |
+| `pnpm --filter @forgeweave/cli test` | Pass | core build 完成後重跑，ACC/minimal `generic.new-feature` CLI E2E 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | generic new-feature workflow export build 通過。 |
+| `pnpm --filter @forgeweave/cli build` | Pass | core build 完成後重跑 CLI build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 3B feature contracts validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | feature contracts exports build 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | small-scope guard tests 通過。 |
@@ -442,6 +467,11 @@
 - [x] FW-P3A-012 acceptance criteria
 - [x] FW-P3B-001 acceptance criteria
 - [x] FW-P3B-002 acceptance criteria
+- [x] FW-P3B-003 acceptance criteria
+- [x] FW-P3B-004 acceptance criteria
+- [x] FW-P3B-005 acceptance criteria
+- [x] FW-P3B-006 acceptance criteria
+- [x] FW-P3B-007 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -476,7 +506,7 @@
 
 ## Next Task
 
-- FW-P3B-003：定義 `generic.new-feature` workflow
+- Phase 3 completed；停止，不自動進入 Phase 4
 
 ## Commit Message
 
@@ -486,6 +516,7 @@ phase-3: FW-P3A-001-003 add write safety guards
 phase-3: FW-P3A-004-009 add bug-fix patch workflow
 phase-3: FW-P3A-010-012 add bug-fix CLI recovery
 phase-3: FW-P3B-001-002 add feature scope contracts
+phase-3: FW-P3B-003-007 add new-feature workflow
 phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store

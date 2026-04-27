@@ -72,11 +72,11 @@ Phase 3 分成 3A 與 3B。
 
 ### Phase 3B — Small New-feature / Enhancement
 
-- [ ] `generic.new-feature` 或 enhancement workflow 可完成小型功能。
+- [x] `generic.new-feature` 或 enhancement workflow 可完成小型功能。
 - [x] small-scope guard 可阻擋過大的 feature request。
-- [ ] 可產出 requirement-brief、feature-spec、implementation-plan。
-- [ ] 新增或修改檔案必須在 allowlist 內。
-- [ ] ACC fixture 與第二專案 fixture 至少各有一個 E2E 驗證。
+- [x] 可產出 requirement-brief、feature-spec、implementation-plan。
+- [x] 新增或修改檔案必須在 allowlist 內。
+- [x] ACC fixture 與第二專案 fixture 至少各有一個 E2E 驗證。
 
 ## Phase 4 — Runtime / State / Workspace Hardening + ACC Migration Gate
 

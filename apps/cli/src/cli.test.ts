@@ -147,4 +147,57 @@ describe("forgeweave CLI skeleton", () => {
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("rerun-summary"));
     expect(stderr).not.toHaveBeenCalled();
   });
+
+  it("runs generic.new-feature on ACC and minimal fixtures", async () => {
+    const { mkdtempSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const accOutput = mkdtempSync(join(tmpdir(), "forgeweave-cli-feature-acc-"));
+    const minimalOutput = mkdtempSync(join(tmpdir(), "forgeweave-cli-feature-minimal-"));
+    const stdout = vi.fn();
+    const stderr = vi.fn();
+
+    await expect(
+      runCli(
+        [
+          "run",
+          "generic.new-feature",
+          "--project-root",
+          accFixtureRoot,
+          "--output-root",
+          accOutput,
+          "--run-id",
+          "acc-feature",
+          "--brief",
+          "Add ACC fixture feature helper."
+        ],
+        { stdout, stderr }
+      )
+    ).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Workflow: generic.new-feature"));
+
+    await expect(
+      runCli(
+        [
+          "run",
+          "generic.new-feature",
+          "--project-root",
+          minimalFixtureRoot,
+          "--output-root",
+          minimalOutput,
+          "--run-id",
+          "minimal-feature",
+          "--brief",
+          "Add minimal fixture feature helper."
+        ],
+        { stdout, stderr }
+      )
+    ).resolves.toBe(0);
+    await expect(runCli(["artifacts", "--output-root", minimalOutput, "--run-id", "minimal-feature"], { stdout, stderr })).resolves.toBe(
+      0
+    );
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("feature-spec"));
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("implementation-plan"));
+    expect(stderr).not.toHaveBeenCalled();
+  });
 });
