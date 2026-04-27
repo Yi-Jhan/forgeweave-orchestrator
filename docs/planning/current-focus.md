@@ -23,7 +23,7 @@ fixture
 Phase 2 Review-first MVP 已完成。Phase 3 runner 已由使用者明確啟動，目前進行 Phase 3A Controlled Bug-fix / Patch-first。
 
 ```text
-FW-P3A-004：command runner skeleton
+FW-P3A-010：reject reason propagation
 ```
 
 Phase 3 完成後停止，不自動進入 Phase 4。

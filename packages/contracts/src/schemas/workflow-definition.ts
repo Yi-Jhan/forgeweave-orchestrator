@@ -51,7 +51,7 @@ export const workflowDefinitionSchema = {
       additionalProperties: false,
       properties: {
         defaultProvider: { type: "string", minLength: 1 },
-        workspaceWrite: { type: "string", enum: ["disallowed"] }
+        workspaceWrite: { type: "string", enum: ["disallowed", "controlled"] }
       }
     }
   }
@@ -85,7 +85,7 @@ export type WorkflowDefinition = {
   };
   runtimePolicy: {
     defaultProvider: string;
-    workspaceWrite: "disallowed";
+    workspaceWrite: "disallowed" | "controlled";
   };
 };
 
@@ -174,8 +174,8 @@ export function validateWorkflowDefinition(value: unknown): WorkflowDefinitionVa
     if (!isNonEmptyString(runtimePolicy.defaultProvider)) {
       errors.push("runtimePolicy.defaultProvider must be a non-empty string");
     }
-    if (runtimePolicy.workspaceWrite !== "disallowed") {
-      errors.push("runtimePolicy.workspaceWrite must be disallowed");
+    if (!["disallowed", "controlled"].includes(String(runtimePolicy.workspaceWrite))) {
+      errors.push("runtimePolicy.workspaceWrite must be disallowed or controlled");
     }
   }
 

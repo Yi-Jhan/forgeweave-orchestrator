@@ -65,9 +65,9 @@ Phase 3 分成 3A 與 3B。
 
 - [x] workdir manager、branch guard、dirty-state guard 可用。
 - [x] file allowlist / denylist 可阻擋越界寫入。
-- [ ] command runner 與 command allowlist 可用。
-- [ ] `generic.bug-fix` 可產生 patch / diff / file-change-set。
-- [ ] validation command 產生 command-summary。
+- [x] command runner 與 command allowlist 可用。
+- [x] `generic.bug-fix` 可產生 patch / diff / file-change-set。
+- [x] validation command 產生 command-summary。
 - [ ] reject reason 可重跑 implementation 或 validation step。
 
 ### Phase 3B — Small New-feature / Enhancement

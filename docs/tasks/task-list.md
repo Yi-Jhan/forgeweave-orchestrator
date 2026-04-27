@@ -73,12 +73,12 @@
 | FW-P3A-001 | Write Safety | 實作 workdir manager | FW-P2-013 | controlled workdir/branch provenance | Committed |
 | FW-P3A-002 | Write Safety | 實作 branch / dirty-state guard | FW-P3A-001 | dirty state 依 policy 阻擋或警告 | Committed |
 | FW-P3A-003 | File Policy | 實作 file allowlist / denylist | FW-P3A-001 | 越界寫入被阻擋且記錄 | Committed |
-| FW-P3A-004 | Command Runner | 實作 command runner skeleton | FW-P2-005 | allowed/blocked/timeout/fail captured as command-summary | Todo |
-| FW-P3A-005 | Command Policy | 實作 command allowlist | FW-P3A-004 | 僅允許 manifest-approved lint/test/build | Todo |
-| FW-P3A-006 | Patch Contracts | 定義 bug-brief / patch-plan / file-change-set schema | FW-P2-002 | changed files、hunks、rationale、risk | Todo |
-| FW-P3A-007 | Diff | 實作 diff/patch capture | FW-P3A-001, FW-P3A-006 | unified diff 與 changed files 可 review | Todo |
-| FW-P3A-008 | Workflow | 定義 `generic.bug-fix` workflow | FW-P3A-006, FW-P3A-007 | brief → plan → patch → validate → review → summary | Todo |
-| FW-P3A-009 | Validation | 整合 lint/test/build command-summary | FW-P3A-004, FW-P3A-008 | stdout/stderr summary、exit code、duration | Todo |
+| FW-P3A-004 | Command Runner | 實作 command runner skeleton | FW-P2-005 | allowed/blocked/timeout/fail captured as command-summary | Committed |
+| FW-P3A-005 | Command Policy | 實作 command allowlist | FW-P3A-004 | 僅允許 manifest-approved lint/test/build | Committed |
+| FW-P3A-006 | Patch Contracts | 定義 bug-brief / patch-plan / file-change-set schema | FW-P2-002 | changed files、hunks、rationale、risk | Committed |
+| FW-P3A-007 | Diff | 實作 diff/patch capture | FW-P3A-001, FW-P3A-006 | unified diff 與 changed files 可 review | Committed |
+| FW-P3A-008 | Workflow | 定義 `generic.bug-fix` workflow | FW-P3A-006, FW-P3A-007 | brief → plan → patch → validate → review → summary | Committed |
+| FW-P3A-009 | Validation | 整合 lint/test/build command-summary | FW-P3A-004, FW-P3A-008 | stdout/stderr summary、exit code、duration | Committed |
 | FW-P3A-010 | Reject Rerun | 實作 reject reason propagation | FW-P2-011, FW-P3A-008 | 不重跑整個 run 也能重跑指定 step | Todo |
 | FW-P3A-011 | CLI Failure | 改善 CLI failure/recovery display | FW-P3A-010 | 顯示 failed step、reason、artifacts、resume/rerun 建議 | Todo |
 | FW-P3A-012 | E2E | ACC small bug-fix patch-run E2E | FW-P3A-011 | diff、command-summary、review gate、summary | Todo |

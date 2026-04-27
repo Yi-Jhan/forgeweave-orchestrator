@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 3 — Feature Delivery MVP
-- Task：FW-P3A-001 / FW-P3A-002 / FW-P3A-003（完成）
+- Task：FW-P3A-004 / FW-P3A-005 / FW-P3A-006 / FW-P3A-007 / FW-P3A-008 / FW-P3A-009（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P3A-004 / FW-P3A-005 / FW-P3A-006 / FW-P3A-007 / FW-P3A-008 / FW-P3A-009
+
+- 目標：建立 patch-first bug-fix delivery 的最小閉環，包含 manifest-approved command runner、command-summary artifact、bug-brief / patch-plan / file-change-set contracts、diff capture 與 `generic.bug-fix` workflow。
+- Acceptance criteria：allowed / blocked / skipped / failed command 都可被 command-summary 捕捉；只允許 manifest 內的 lint/test/build command；bug-brief、patch-plan、file-change-set schema 有基本 validation test；diff capture 可產生 changed files 與 unified diff；`generic.bug-fix` 可在 controlled workdir 產生 patch、validation summary、review findings、delivery summary。
+- 預期修改檔案：`packages/contracts/src/index.ts`、`packages/contracts/src/schemas/workflow-definition.ts`、`packages/contracts/src/schemas/phase-2-contracts.test.ts`、`packages/core/src/index.ts`、`packages/core/src/workflow-runner.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`。
+- 預期新增檔案：`packages/contracts/src/schemas/phase-3-contracts.ts`、`packages/contracts/src/schemas/phase-3-contracts.test.ts`、`packages/core/src/command-runner.ts`、`packages/core/src/command-runner.test.ts`、`packages/core/src/diff-capture.ts`、`packages/core/src/diff-capture.test.ts`、`packages/core/src/workflows/generic-bug-fix.ts`、`packages/core/src/generic-bug-fix-workflow.test.ts`。
+- Non-goals：不實作 reject-rerun CLI；不實作 new-feature workflow；不做 ACC single-page migration；不對真實 ACC source 寫入。
+- Checks / tests：`pnpm --filter @forgeweave/contracts test`；`pnpm --filter @forgeweave/contracts build`；`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`；`git diff --check`。
+- 風險與避免方式：fixture manifest 內 command 可能不可實際執行；缺少 package.json 時以 skipped command-summary 記錄，不視為 workflow failure。patch 寫入 output root controlled workdir，不碰 source fixture。
 
 ## Task Execution Plan — FW-P3A-001 / FW-P3A-002 / FW-P3A-003
 
@@ -177,6 +187,12 @@
 
 ## Completed
 
+- FW-P3A-004：新增 command runner skeleton，可捕捉 passed / failed / blocked / skipped / timed-out command records。
+- FW-P3A-005：新增 command allowlist policy，只允許 manifest-approved lint / test / build；其他 command 會被 blocked。
+- FW-P3A-006：新增 bug-brief、patch-plan、file-change-set、command-summary contracts 與 validation tests。
+- FW-P3A-007：新增 diff capture，產出 changedFiles metadata 與 unified diff。
+- FW-P3A-008：新增 `generic.bug-fix` workflow，支援 brief → plan → patch → validate → review gate。
+- FW-P3A-009：`generic.bug-fix` validation step 會產生 command-summary artifact；fixture 缺少 package.json 時記錄 skipped，不視為 workflow failure。
 - FW-P3A-001：新增 controlled workdir manager，會複製到 output root 下的隔離 workdir，並記錄 source/workdir/provenance。
 - FW-P3A-002：新增 branch / dirty-state guard；live-patch dirty state 會阻擋，fixture dirty state 會記錄 warning。
 - FW-P3A-003：新增 file allowlist / denylist policy，阻擋越界、denylist、未 allowlist 與未允許的新檔。
@@ -290,6 +306,10 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm --filter @forgeweave/contracts test` | Pass | Phase 3 patch / command contracts tests 通過。 |
+| `pnpm --filter @forgeweave/contracts build` | Pass | workflow definition controlled workspace-write type build 通過。 |
+| `pnpm --filter @forgeweave/core test` | Pass | command runner、diff capture、generic.bug-fix workflow tests 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | contracts build 完成後重跑 core build 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | Phase 3A write safety guard tests 通過。 |
 | `pnpm --filter @forgeweave/core build` | Pass | workdir manager / write-safety exports build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 2 workflow/artifact/event/review artifact schema validation tests 通過。 |
@@ -376,6 +396,12 @@
 - [x] FW-P3A-001 acceptance criteria
 - [x] FW-P3A-002 acceptance criteria
 - [x] FW-P3A-003 acceptance criteria
+- [x] FW-P3A-004 acceptance criteria
+- [x] FW-P3A-005 acceptance criteria
+- [x] FW-P3A-006 acceptance criteria
+- [x] FW-P3A-007 acceptance criteria
+- [x] FW-P3A-008 acceptance criteria
+- [x] FW-P3A-009 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -410,13 +436,14 @@
 
 ## Next Task
 
-- FW-P3A-004：實作 command runner skeleton
+- FW-P3A-010：實作 reject reason propagation
 
 ## Commit Message
 
 ```text
 phase-2: complete review-first gate
 phase-3: FW-P3A-001-003 add write safety guards
+phase-3: FW-P3A-004-009 add bug-fix patch workflow
 phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store

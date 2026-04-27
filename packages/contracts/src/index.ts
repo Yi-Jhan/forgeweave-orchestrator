@@ -65,3 +65,27 @@ export {
   type ReviewFindings,
   type ReviewSeverity
 } from "./schemas/review-artifacts.js";
+export {
+  bugBriefSchema,
+  commandSummarySchema,
+  fileChangeSetSchema,
+  isBugBrief,
+  isCommandSummary,
+  isFileChangeSet,
+  isPatchPlan,
+  patchPlanSchema,
+  validateBugBrief,
+  validateCommandSummary,
+  validateFileChangeSet,
+  validatePatchPlan,
+  type BugBrief,
+  type CommandRunRecord,
+  type CommandStatus,
+  type CommandSummary,
+  type FileChange,
+  type FileChangeHunk,
+  type FileChangeOperation,
+  type FileChangeSet,
+  type PatchPlan,
+  type Phase3ValidationResult
+} from "./schemas/phase-3-contracts.js";

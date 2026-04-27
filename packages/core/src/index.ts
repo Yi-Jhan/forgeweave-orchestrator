@@ -61,6 +61,20 @@ export {
   createMockRuntimeProvider
 } from "./mock-runtime-provider.js";
 export {
+  evaluateCommandAllowlist,
+  runAllowedCommand,
+  runValidationCommandSummary,
+  type CommandAllowlistDecision,
+  type RunCommandOptions,
+  type ValidationCommandName
+} from "./command-runner.js";
+export {
+  captureFileChangeSet,
+  snapshotFiles,
+  type CaptureFileChangeSetInput,
+  type FileSnapshot
+} from "./diff-capture.js";
+export {
   runWorkflow,
   type RunWorkflowOptions,
   type RunWorkflowResult
@@ -68,6 +82,9 @@ export {
 export {
   genericReviewWorkflow
 } from "./workflows/generic-review.js";
+export {
+  genericBugFixWorkflow
+} from "./workflows/generic-bug-fix.js";
 export {
   recordReviewDecision,
   type ReviewDecisionInput,
