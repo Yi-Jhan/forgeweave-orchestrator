@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 0 — Foundation / Repo Scaffold
-- Task：FW-P0-004 — 建立 CLI skeleton 與 help/version（完成）
+- Task：FW-P0-005 — 建立 unit / contract / smoke test harness（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P0-001
@@ -46,12 +46,23 @@
 - Checks / tests：`pnpm build`；`pnpm test`；`pnpm --filter @forgeweave/cli test`；`pnpm --filter @forgeweave/cli smoke`；lint N/A。
 - 風險與避免方式：避免 CLI skeleton 被擴張成 Phase 1 onboarding；本 task 只接受 help/version 與 unknown command fallback。
 
+## Task Execution Plan — FW-P0-005
+
+- 目標：建立 Phase 0 測試 harness，讓 unit、contract、CLI 與 smoke checks 有明確入口。
+- Acceptance criteria：至少一個 schema / contract test；至少一個 CLI test；至少一個 smoke check；root test 不重複執行 `dist` 內編譯產物。
+- 預期修改檔案：`package.json`、`apps/cli/package.json`、`apps/cli/tsconfig.json`、`packages/contracts/package.json`、`packages/contracts/tsconfig.json`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`vitest.config.ts`。
+- Non-goals：不加入 coverage gate；不建立 E2E workflow runner；不實作 Phase 1 manifest fixtures validation。
+- Checks / tests：`pnpm build`；`pnpm test`；`pnpm test:contract`；`pnpm test:cli`；`pnpm test:smoke`；lint N/A。
+- 風險與避免方式：避免 glob 在 Windows script 中失效；使用明確 test file path 作為 Phase 0 baseline。
+
 ## Completed
 
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
 - FW-P0-002：加入 TypeScript / Vitest baseline，建立 `@forgeweave/core` 最小可編譯 package。
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
 - FW-P0-004：建立 `@forgeweave/cli` skeleton，支援 help/version 與 CLI smoke check。
+- FW-P0-005：建立 root Vitest config 與 unit / contract / CLI / smoke test scripts。
 
 ## Changed Files
 
@@ -80,6 +91,7 @@
 - `apps/cli/src/index.ts`
 - `apps/cli/src/version.ts`
 - `apps/cli/src/cli.test.ts`
+- `vitest.config.ts`
 
 ## Commands / Checks
 
@@ -100,6 +112,12 @@
 | `pnpm --filter @forgeweave/cli test` | Pass | CLI help/version smoke 單元測試通過。 |
 | `pnpm --filter @forgeweave/cli smoke` | Pass | `node dist/main.js --help` 與 `--version` 通過。 |
 | lint | N/A | 尚未定義 lint script。 |
+| `pnpm build` | Pass | 測試檔已排除在 package build 輸出之外。 |
+| `pnpm test` | Pass | root Vitest config 排除 `dist`，只執行 source tests。 |
+| `pnpm test:contract` | Pass | contracts schema placeholder test 通過。 |
+| `pnpm test:cli` | Pass | CLI help/version unit test 通過。 |
+| `pnpm test:smoke` | Pass | CLI build 後執行 help/version smoke check。 |
+| lint | N/A | 尚未定義 lint script。 |
 
 ## Acceptance Criteria Status
 
@@ -107,6 +125,7 @@
 - [x] FW-P0-002 acceptance criteria
 - [x] FW-P0-003 acceptance criteria
 - [x] FW-P0-004 acceptance criteria
+- [x] FW-P0-005 acceptance criteria
 
 ## Blocking Items
 
@@ -118,7 +137,7 @@
 
 ## Next Task
 
-- FW-P0-005 — 建立 unit / contract / smoke test harness
+- FW-P0-006 — 建立本機 run/artifact fixture 目錄
 
 ## Commit Message
 
@@ -127,4 +146,5 @@ phase-0: FW-P0-001 initialize monorepo baseline
 phase-0: FW-P0-002 add typescript tooling baseline
 phase-0: FW-P0-003 add contracts package skeleton
 phase-0: FW-P0-004 add cli skeleton
+phase-0: FW-P0-005 add test harness
 ```

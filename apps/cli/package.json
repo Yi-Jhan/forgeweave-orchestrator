@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run",
+    "test": "vitest run src/cli.test.ts",
     "smoke": "node dist/main.js --help && node dist/main.js --version"
   }
 }
