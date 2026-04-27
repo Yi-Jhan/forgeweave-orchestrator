@@ -18,7 +18,7 @@
 - [ ] CLI skeleton 可執行 help/version 或等價 smoke check。
 - [ ] contracts package skeleton 存在。
 - [x] core package skeleton 或 Phase 0 指定的最小核心骨架存在。
-- [ ] build / test baseline 可執行。
+- [x] build / test baseline 可執行。
 - [ ] worklog 與 task status 已更新。
 
 ## Phase 1 — Project Onboarding MVP
