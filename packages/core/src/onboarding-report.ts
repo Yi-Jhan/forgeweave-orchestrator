@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import { recommendAdapter, type AdapterRecommendation } from "./adapter-recommendation.js";
@@ -60,10 +60,19 @@ export function runProjectOnboarding(options: RunProjectOnboardingOptions): Onbo
   const report = buildOnboardingReport(options.projectRoot);
   if (options.writeArtifacts === true) {
     const outputDir = join(resolve(options.projectRoot), ".forgeweave", "onboarding");
+    const outputs = [
+      join(outputDir, "onboarding-report.json"),
+      join(outputDir, "context-packet.json"),
+      join(outputDir, "provider-capability-matrix.json")
+    ];
+    const existingOutput = outputs.find((output) => existsSync(output));
+    if (existingOutput !== undefined) {
+      throw new Error(`Refusing to overwrite existing onboarding artifact: ${existingOutput}`);
+    }
     mkdirSync(outputDir, { recursive: true });
-    writeFileSync(join(outputDir, "onboarding-report.json"), `${JSON.stringify(report, null, 2)}\n`);
-    writeFileSync(join(outputDir, "context-packet.json"), `${JSON.stringify(report.contextPacket, null, 2)}\n`);
-    writeFileSync(join(outputDir, "provider-capability-matrix.json"), `${JSON.stringify(report.capabilityMatrix, null, 2)}\n`);
+    writeFileSync(outputs[0], `${JSON.stringify(report, null, 2)}\n`);
+    writeFileSync(outputs[1], `${JSON.stringify(report.contextPacket, null, 2)}\n`);
+    writeFileSync(outputs[2], `${JSON.stringify(report.capabilityMatrix, null, 2)}\n`);
   }
   return report;
 }

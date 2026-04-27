@@ -12,9 +12,12 @@
       "import": "./dist/index.js"
     }
   },
+  "dependencies": {
+    "@forgeweave/core": "workspace:*"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run src/cli.test.ts",
-    "smoke": "node dist/main.js --help && node dist/main.js --version"
+    "test": "vitest run --root ../.. apps/cli/src/cli.test.ts",
+    "smoke": "node dist/main.js --help && node dist/main.js --version && node dist/main.js init --project-root ../../examples/acc --dry-run && node dist/main.js init --project-root ../../examples/minimal-project --dry-run"
   }
 }

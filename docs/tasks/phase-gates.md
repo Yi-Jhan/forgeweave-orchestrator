@@ -26,8 +26,8 @@
 
 ### Implementation Gate
 
-- [ ] `forgeweave init` 可對 `examples/acc` 執行。
-- [ ] `forgeweave init` 可對 `examples/minimal-project` 執行。
+- [x] `forgeweave init` 可對 `examples/acc` 執行。
+- [x] `forgeweave init` 可對 `examples/minimal-project` 執行。
 - [x] project manifest schema 可驗證 fixture manifests。
 - [x] manifest loader / normalizer 可用。
 - [x] GenericProjectAdapter / project detector 可產出 project signals。
@@ -43,10 +43,10 @@
 
 若未設定，標記為 `blocked-external`，不阻擋 Phase 1 implementation gate。
 
-- [ ] 真實 ACC repo 可被偵測。
-- [ ] live-readonly onboarding dry-run 完成。
-- [ ] asset gap report 可產出且已 sanitized。
-- [ ] 不複製真實 ACC source 進 ForgeWeave repo。
+- [ ] 真實 ACC repo 可被偵測。（Blocked External：`FORGEWEAVE_ACC_ROOT` 未設定）
+- [ ] live-readonly onboarding dry-run 完成。（Blocked External：`FORGEWEAVE_ACC_ROOT` 未設定）
+- [ ] asset gap report 可產出且已 sanitized。（Blocked External：`FORGEWEAVE_ACC_ROOT` 未設定）
+- [x] 不複製真實 ACC source 進 ForgeWeave repo。
 
 ## Phase 2 — Review-first MVP
 

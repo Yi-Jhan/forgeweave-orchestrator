@@ -1,10 +1,16 @@
 import { describe, expect, it } from "vitest";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { buildOnboardingReport, loadProjectManifest, runMockProviderPreflight } from "./index.js";
 
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+const accFixtureRoot = resolve(repoRoot, "examples/acc");
+const minimalFixtureRoot = resolve(repoRoot, "examples/minimal-project");
+
 describe("phase 1 onboarding core", () => {
   it("loads and normalizes the ACC fixture manifest", () => {
-    const loaded = loadProjectManifest("../../examples/acc");
+    const loaded = loadProjectManifest(accFixtureRoot);
 
     expect(loaded.manifest.project.id).toBe("acc-fixture");
     expect(loaded.manifest.schemaVersion).toBe("1.0.0");
@@ -12,7 +18,7 @@ describe("phase 1 onboarding core", () => {
   });
 
   it("builds an onboarding report for the ACC fixture", () => {
-    const report = buildOnboardingReport("../../examples/acc");
+    const report = buildOnboardingReport(accFixtureRoot);
 
     expect(report.adapter.recommendedAdapter).toBe("ProjectSpecificAdapter");
     expect(report.contextPacket.projectId).toBe("acc-fixture");
@@ -21,7 +27,7 @@ describe("phase 1 onboarding core", () => {
   });
 
   it("builds an onboarding report for the minimal fixture without ACC coupling", () => {
-    const report = buildOnboardingReport("../../examples/minimal-project");
+    const report = buildOnboardingReport(minimalFixtureRoot);
 
     expect(report.adapter.recommendedAdapter).toBe("GenericProjectAdapter");
     expect(report.contextPacket.projectId).toBe("minimal-project-fixture");

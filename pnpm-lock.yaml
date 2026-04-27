@@ -13,7 +13,10 @@ importers:
       vitest: 4.1.5_@types+node@25.6.0
 
   apps/cli:
-    specifiers: {}
+    specifiers:
+      '@forgeweave/core': workspace:*
+    dependencies:
+      '@forgeweave/core': link:../../packages/core
 
   packages/contracts:
     specifiers: {}

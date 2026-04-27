@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 1 — Project Onboarding MVP
-- Task：FW-P1-002 / FW-P1-004 / FW-P1-005 / FW-P1-007 / FW-P1-008 / FW-P1-010 / FW-P1-011 / FW-P1-012 — Phase 1 onboarding core cluster（完成）
+- Task：FW-P1-003 / FW-P1-013 / FW-P1-014 / FW-P1-LIVE-001 — CLI init 與 fixture gate cluster（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P1-001 / FW-P1-006 / FW-P1-009
@@ -25,6 +25,16 @@
 - Non-goals：不實作 `generic.review` workflow；不做 workspace-write；不寫入真實 ACC repo；不實作完整 runtime provider。
 - Checks / tests：`pnpm install`；`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`。
 - 風險與避免方式：避免 onboarding core 綁死 ACC；minimal-project smoke test 驗證 GenericProjectAdapter path，ACC path 僅用 fixture profile 推薦 ProjectSpecificAdapter。
+
+## Task Execution Plan — FW-P1-003 / FW-P1-013 / FW-P1-014 / FW-P1-LIVE-001
+
+- 目標：接上 `forgeweave init` CLI onboarding flow，讓 ACC fixture 與 minimal-project fixture 都能 dry-run 產出 onboarding summary；確認未設定 `FORGEWEAVE_ACC_ROOT` 時 live ACC validation 標為 `Blocked External`。
+- Acceptance criteria：`forgeweave init --project-root examples/acc --dry-run` 可跑；`examples/minimal-project` 可跑；dry-run 不覆蓋或建立 fixture artifacts；live ACC validation 未設定外部 root 時不阻擋 implementation gate。
+- 預期修改檔案：`apps/cli/src/cli.ts`、`apps/cli/src/cli.test.ts`、`apps/cli/package.json`、`packages/core/src/onboarding-report.ts`、`package.json`、`pnpm-lock.yaml`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`、`docs/planning/current-focus.md`。
+- 預期新增檔案：無。
+- Non-goals：不寫入真實 ACC repo；不實作 Phase 2 review workflow；不導入 TUI/WebUI；不實作 live-patch。
+- Checks / tests：`pnpm install`；`pnpm build`；`pnpm test`；`pnpm test:contract`；`pnpm test:cli`；`pnpm test:smoke`；`pnpm --filter @forgeweave/contracts test`；`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/cli test`；`pnpm --filter @forgeweave/cli smoke`。
+- 風險與避免方式：避免 dry-run 對 fixture 產生 committed artifact；實測 `examples/acc/.forgeweave` 與 `examples/minimal-project/.forgeweave` 不存在。
 
 ## Task Execution Plan — FW-P0-001
 
@@ -110,6 +120,7 @@
 
 - FW-P1-001：新增 project manifest schema、type 與 validation helper。
 - FW-P1-002：新增 manifest finder / loader / normalizer，支援 fixture YAML manifest。
+- FW-P1-003：新增 `forgeweave init` CLI onboarding flow，支援 `--project-root`、`--dry-run`、`--write`。
 - FW-P1-004：新增 generic project detector，產出 language、framework、package manager、source/test roots 與 command signals。
 - FW-P1-005：新增 adapter recommendation report，含推薦 adapter、理由與缺口。
 - FW-P1-006：新增 provider asset profile schema、type 與 validation helper。
@@ -119,6 +130,9 @@
 - FW-P1-010：新增 deterministic mock provider preflight。
 - FW-P1-011：新增 provider capability matrix v0。
 - FW-P1-012：新增 onboarding report artifact builder。
+- FW-P1-013：ACC fixture onboarding smoke test 通過。
+- FW-P1-014：minimal-project onboarding smoke test 通過。
+- FW-P1-LIVE-001：`FORGEWEAVE_ACC_ROOT` 未設定，依 policy 標記為 `Blocked External`。
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
 - FW-P0-002：加入 TypeScript / Vitest baseline，建立 `@forgeweave/core` 最小可編譯 package。
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
@@ -148,6 +162,10 @@
 - `packages/core/package.json`
 - `packages/core/tsconfig.json`
 - `pnpm-lock.yaml`
+- `apps/cli/src/cli.ts`
+- `apps/cli/src/cli.test.ts`
+- `apps/cli/package.json`
+- `package.json`
 - `package.json`
 - `pnpm-workspace.yaml`
 - `apps/cli/.gitkeep`
@@ -200,6 +218,12 @@
 | `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
 | `pnpm --filter @forgeweave/core test` | Pass | ACC / minimal-project onboarding core fixture tests 通過。 |
 | `pnpm --filter @forgeweave/core build` | Pass | core onboarding API TypeScript build 通過。 |
+| `pnpm build` | Pass | contracts、core、CLI workspace build 通過。 |
+| `pnpm test` | Pass | 6 個 test files / 17 tests 通過。 |
+| `pnpm test:contract` | Pass | Phase 0 + Phase 1 contract schema tests 通過。 |
+| `pnpm test:cli` | Pass | CLI help/version/init unit tests 通過。 |
+| `pnpm test:smoke` | Pass | CLI help/version 與 ACC/minimal `forgeweave init --dry-run` smoke checks 通過。 |
+| `pnpm --filter @forgeweave/cli smoke` | Pass | fixture init summary 可產出；dry-run 未建立 `.forgeweave` artifacts。 |
 | `pnpm install --lockfile-only` | Pass | 無 dependencies，未產生 lockfile。 |
 | `pnpm build` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
 | `pnpm test` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
@@ -236,6 +260,7 @@
 
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
+- [x] FW-P1-003 acceptance criteria
 - [x] FW-P1-004 acceptance criteria
 - [x] FW-P1-005 acceptance criteria
 - [x] FW-P1-006 acceptance criteria
@@ -245,6 +270,9 @@
 - [x] FW-P1-010 acceptance criteria
 - [x] FW-P1-011 acceptance criteria
 - [x] FW-P1-012 acceptance criteria
+- [x] FW-P1-013 acceptance criteria
+- [x] FW-P1-014 acceptance criteria
+- [x] FW-P1-LIVE-001 marked Blocked External
 - [x] FW-P0-001 acceptance criteria
 - [x] FW-P0-002 acceptance criteria
 - [x] FW-P0-003 acceptance criteria
@@ -264,7 +292,7 @@
 
 ## Next Task
 
-- FW-P1-003 — `forgeweave init` CLI onboarding flow 與 fixture smoke tests
+- Phase 1 completed；停止，不自動進入 Phase 2
 
 ## Commit Message
 
@@ -279,4 +307,5 @@ phase-0: FW-P0-007 add task status flow docs
 phase-0: FW-P0-008 add reference fixture shells
 phase-1: FW-P1-contracts add onboarding schemas
 phase-1: FW-P1-core add onboarding pipeline
+phase-1: FW-P1-cli add init fixture smoke
 ```

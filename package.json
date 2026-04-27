@@ -9,7 +9,7 @@
     "build": "pnpm -r --if-present build",
     "test": "vitest run --passWithNoTests",
     "test:unit": "vitest run --passWithNoTests",
-    "test:contract": "vitest run packages/contracts/src/schemas/base-contract.test.ts",
+    "test:contract": "vitest run packages/contracts/src/schemas",
     "test:cli": "vitest run apps/cli/src/cli.test.ts",
     "test:smoke": "pnpm --filter @forgeweave/cli build && pnpm --filter @forgeweave/cli smoke"
   },

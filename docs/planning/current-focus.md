@@ -2,7 +2,7 @@
 
 ## Active Phase
 
-Phase 0 — Foundation / Repo Scaffold（completed）
+Phase 1 — Project Onboarding MVP（completed）
 
 ## Active Validation Mode
 
@@ -20,10 +20,10 @@ fixture
 
 ## 下一步
 
-Phase 0 已完成並停止。下一個建議階段是 Phase 1 runner，但需由使用者明確啟動。
+Phase 1 已完成並停止。下一個建議階段是 Phase 2 runner，但需由使用者明確啟動。
 
 ```text
-docs/prompts/run-phase-1-autonomous.md
+docs/prompts/run-phase-2-autonomous.md
 ```
 
-本次執行不自動進入 Phase 1。
+本次執行不自動進入 Phase 2。
