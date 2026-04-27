@@ -19,7 +19,7 @@
 - [x] contracts package skeleton 存在。
 - [x] core package skeleton 或 Phase 0 指定的最小核心骨架存在。
 - [x] build / test baseline 可執行。
-- [ ] worklog 與 task status 已更新。
+- [x] worklog 與 task status 已更新。
 
 ## Phase 1 — Project Onboarding MVP
 

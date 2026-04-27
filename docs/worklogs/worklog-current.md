@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 0 — Foundation / Repo Scaffold
-- Task：FW-P0-006 — 建立本機 run/artifact fixture 目錄（完成）
+- Task：FW-P0-007 — 建立最小 docs/worklogs/task status 串接（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P0-001
@@ -66,6 +66,16 @@
 - Checks / tests：`pnpm build`；`pnpm test`；`pnpm test:smoke`；fixture layout test。
 - 風險與避免方式：避免 fixture 被誤認為 live output；README 明確標示 sanitized fixture，且放在 `tests/fixtures`。
 
+## Task Execution Plan — FW-P0-007
+
+- 目標：建立最小 task status flow 文件，讓 worklog、active task、task list、phase gate 的更新方式一致。
+- Acceptance criteria：worklog template 包含 Task Execution Plan 欄位；status flow 文件說明狀態與更新順序；phase gate 可反映 docs/status 已更新。
+- 預期修改檔案：`docs/worklogs/README.md`、`docs/worklogs/worklog-template.md`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`。
+- 預期新增檔案：`docs/tasks/status-flow.md`。
+- Non-goals：不建立 `.xlsx`；不更改 Phase 1+ scope；不導入自動文件產生工具。
+- Checks / tests：`pnpm build`；`pnpm test`；lint N/A。
+- 風險與避免方式：避免文件流程和 runner prompt 衝突；沿用 `workflow-cycle.md` 與 Phase runner 既有順序。
+
 ## Completed
 
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
@@ -74,6 +84,7 @@
 - FW-P0-004：建立 `@forgeweave/cli` skeleton，支援 help/version 與 CLI smoke check。
 - FW-P0-005：建立 root Vitest config 與 unit / contract / CLI / smoke test scripts。
 - FW-P0-006：建立 `.forgeweave` runtime fixture layout 與 fixture layout test。
+- FW-P0-007：建立 task status flow 文件，補齊 worklog template 與 phase gate 狀態串接。
 
 ## Changed Files
 
@@ -109,6 +120,9 @@
 - `tests/fixtures/runtime/basic-project/.forgeweave/artifacts/.gitkeep`
 - `tests/fixtures/runtime/basic-project/.forgeweave/events/.gitkeep`
 - `tests/fixtures/runtime-layout.test.ts`
+- `docs/tasks/status-flow.md`
+- `docs/worklogs/README.md`
+- `docs/worklogs/worklog-template.md`
 
 ## Commands / Checks
 
@@ -138,6 +152,8 @@
 | `pnpm build` | Pass | workspace build 通過。 |
 | `pnpm test` | Pass | 包含 runtime fixture layout test。 |
 | `pnpm test:smoke` | Pass | CLI help/version smoke check 通過。 |
+| `pnpm build` | Pass | docs-only task，確認 workspace build 未受影響。 |
+| `pnpm test` | Pass | docs-only task，確認 test harness 未受影響。 |
 
 ## Acceptance Criteria Status
 
@@ -147,6 +163,7 @@
 - [x] FW-P0-004 acceptance criteria
 - [x] FW-P0-005 acceptance criteria
 - [x] FW-P0-006 acceptance criteria
+- [x] FW-P0-007 acceptance criteria
 
 ## Blocking Items
 
@@ -158,7 +175,7 @@
 
 ## Next Task
 
-- FW-P0-007 — 建立最小 docs/worklogs/task status 串接
+- FW-P0-008 — 建立 ACC 與 minimal-project fixture shell
 
 ## Commit Message
 
@@ -169,4 +186,5 @@ phase-0: FW-P0-003 add contracts package skeleton
 phase-0: FW-P0-004 add cli skeleton
 phase-0: FW-P0-005 add test harness
 phase-0: FW-P0-006 add runtime fixture layout
+phase-0: FW-P0-007 add task status flow docs
 ```

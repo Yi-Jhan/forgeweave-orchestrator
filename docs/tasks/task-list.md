@@ -21,7 +21,7 @@
 | FW-P0-004 | CLI | 建立 CLI skeleton 與 help/version | FW-P0-001 | `forgeweave --help` 或等價 smoke check 可跑 | Committed |
 | FW-P0-005 | Test Harness | 建立 unit / contract / smoke test harness | FW-P0-002, FW-P0-003 | 至少一個 smoke、schema、CLI test | Committed |
 | FW-P0-006 | Storage Fixtures | 建立本機 run/artifact fixture 目錄 | FW-P0-001 | `.forgeweave` runtime layout 可被測試引用 | Committed |
-| FW-P0-007 | Docs | 建立最小 docs/worklogs/task status 串接 | FW-P0-001 | worklog、active task、phase gate 可更新 | Todo |
+| FW-P0-007 | Docs | 建立最小 docs/worklogs/task status 串接 | FW-P0-001 | worklog、active task、phase gate 可更新 | Committed |
 | FW-P0-008 | Fixtures | 建立 ACC 與 minimal-project fixture shell | FW-P0-005 | 不依賴真實 ACC repo | Todo |
 
 ## Phase 1 — Project Onboarding MVP
