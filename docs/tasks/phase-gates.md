@@ -15,7 +15,7 @@
 
 - [x] root `package.json` 存在。
 - [x] workspace config 存在，例如 `pnpm-workspace.yaml` 或等價配置。
-- [ ] CLI skeleton 可執行 help/version 或等價 smoke check。
+- [x] CLI skeleton 可執行 help/version 或等價 smoke check。
 - [x] contracts package skeleton 存在。
 - [x] core package skeleton 或 Phase 0 指定的最小核心骨架存在。
 - [x] build / test baseline 可執行。

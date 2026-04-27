@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 0 — Foundation / Repo Scaffold
-- Task：FW-P0-003 — 建立 contracts package skeleton（完成，待 commit）
+- Task：FW-P0-004 — 建立 CLI skeleton 與 help/version（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P0-001
@@ -36,11 +36,22 @@
 - Checks / tests：`pnpm build`；`pnpm test`；`pnpm --filter @forgeweave/contracts test`；`git diff --check`。
 - 風險與避免方式：避免 placeholder 被誤認為正式 schema；名稱與 `$id` 明確標記 placeholder，正式 contract 留到後續 Phase。
 
+## Task Execution Plan — FW-P0-004
+
+- 目標：建立 `@forgeweave/cli` skeleton，提供可編譯、可測試的 help/version 入口。
+- Acceptance criteria：CLI package 可 build；`forgeweave --help` 或等價 smoke check 可跑；`--version` 可輸出版本。
+- 預期修改檔案：`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`。
+- 預期新增檔案：`apps/cli/package.json`、`apps/cli/tsconfig.json`、`apps/cli/src/cli.ts`、`apps/cli/src/main.ts`、`apps/cli/src/index.ts`、`apps/cli/src/version.ts`、`apps/cli/src/cli.test.ts`。
+- Non-goals：不實作 `forgeweave init`；不讀取 manifest；不加入 provider preflight、review workflow 或 workspace-write 行為。
+- Checks / tests：`pnpm build`；`pnpm test`；`pnpm --filter @forgeweave/cli test`；`pnpm --filter @forgeweave/cli smoke`；lint N/A。
+- 風險與避免方式：避免 CLI skeleton 被擴張成 Phase 1 onboarding；本 task 只接受 help/version 與 unknown command fallback。
+
 ## Completed
 
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
 - FW-P0-002：加入 TypeScript / Vitest baseline，建立 `@forgeweave/core` 最小可編譯 package。
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
+- FW-P0-004：建立 `@forgeweave/cli` skeleton，支援 help/version 與 CLI smoke check。
 
 ## Changed Files
 
@@ -62,6 +73,13 @@
 - `packages/contracts/src/index.ts`
 - `packages/contracts/src/schemas/base-contract.ts`
 - `packages/contracts/src/schemas/base-contract.test.ts`
+- `apps/cli/package.json`
+- `apps/cli/tsconfig.json`
+- `apps/cli/src/cli.ts`
+- `apps/cli/src/main.ts`
+- `apps/cli/src/index.ts`
+- `apps/cli/src/version.ts`
+- `apps/cli/src/cli.test.ts`
 
 ## Commands / Checks
 
@@ -77,12 +95,18 @@
 | `pnpm build` | Pass | `@forgeweave/contracts` 與 `@forgeweave/core` build 通過。 |
 | `pnpm test` | Pass | contracts validation test 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | schema placeholder validation test 通過。 |
+| `pnpm build` | Pass | `@forgeweave/cli`、contracts、core build 通過。 |
+| `pnpm test` | Pass | CLI、contracts 測試通過。 |
+| `pnpm --filter @forgeweave/cli test` | Pass | CLI help/version smoke 單元測試通過。 |
+| `pnpm --filter @forgeweave/cli smoke` | Pass | `node dist/main.js --help` 與 `--version` 通過。 |
+| lint | N/A | 尚未定義 lint script。 |
 
 ## Acceptance Criteria Status
 
 - [x] FW-P0-001 acceptance criteria
 - [x] FW-P0-002 acceptance criteria
 - [x] FW-P0-003 acceptance criteria
+- [x] FW-P0-004 acceptance criteria
 
 ## Blocking Items
 
@@ -94,7 +118,7 @@
 
 ## Next Task
 
-- FW-P0-004 — 建立 CLI skeleton 與 help/version
+- FW-P0-005 — 建立 unit / contract / smoke test harness
 
 ## Commit Message
 
@@ -102,4 +126,5 @@
 phase-0: FW-P0-001 initialize monorepo baseline
 phase-0: FW-P0-002 add typescript tooling baseline
 phase-0: FW-P0-003 add contracts package skeleton
+phase-0: FW-P0-004 add cli skeleton
 ```

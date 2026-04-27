@@ -17,8 +17,8 @@
 | --- | --- | --- | --- | --- | --- |
 | FW-P0-001 | Repo Scaffold | 初始化 monorepo baseline | - | root package、workspace config、最小 apps/packages 結構 | Committed |
 | FW-P0-002 | Tooling | 建立 TypeScript build / test baseline | FW-P0-001 | build/test 可跑，尚無 lint 可標 N/A | Committed |
-| FW-P0-003 | Contracts | 建立 contracts package skeleton | FW-P0-001 | schema placeholder 與 type barrel 可匯出 | Implemented |
-| FW-P0-004 | CLI | 建立 CLI skeleton 與 help/version | FW-P0-001 | `forgeweave --help` 或等價 smoke check 可跑 | Todo |
+| FW-P0-003 | Contracts | 建立 contracts package skeleton | FW-P0-001 | schema placeholder 與 type barrel 可匯出 | Committed |
+| FW-P0-004 | CLI | 建立 CLI skeleton 與 help/version | FW-P0-001 | `forgeweave --help` 或等價 smoke check 可跑 | Committed |
 | FW-P0-005 | Test Harness | 建立 unit / contract / smoke test harness | FW-P0-002, FW-P0-003 | 至少一個 smoke、schema、CLI test | Todo |
 | FW-P0-006 | Storage Fixtures | 建立本機 run/artifact fixture 目錄 | FW-P0-001 | `.forgeweave` runtime layout 可被測試引用 | Todo |
 | FW-P0-007 | Docs | 建立最小 docs/worklogs/task status 串接 | FW-P0-001 | worklog、active task、phase gate 可更新 | Todo |
