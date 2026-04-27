@@ -20,6 +20,7 @@
 - [x] core package skeleton 或 Phase 0 指定的最小核心骨架存在。
 - [x] build / test baseline 可執行。
 - [x] worklog 與 task status 已更新。
+- [x] fixture shell 不依賴真實 ACC source。
 
 ## Phase 1 — Project Onboarding MVP
 

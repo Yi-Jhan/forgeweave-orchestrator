@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 0 — Foundation / Repo Scaffold
-- Task：FW-P0-007 — 建立最小 docs/worklogs/task status 串接（完成）
+- Task：FW-P0-008 — 建立 ACC 與 minimal-project fixture shell（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P0-001
@@ -76,6 +76,16 @@
 - Checks / tests：`pnpm build`；`pnpm test`；lint N/A。
 - 風險與避免方式：避免文件流程和 runner prompt 衝突；沿用 `workflow-cycle.md` 與 Phase runner 既有順序。
 
+## Task Execution Plan — FW-P0-008
+
+- 目標：建立或確認 ACC 與 minimal-project fixture shell，並以 smoke test 確認不依賴真實 ACC repo。
+- Acceptance criteria：`examples/acc` 與 `examples/minimal-project` 有 fixture manifest / README / placeholder shell；測試確認 fixture mode 與外部 root env 設定；不包含真實 ACC source。
+- 預期修改檔案：`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`、`docs/planning/current-focus.md`。
+- 預期新增檔案：`examples/acc/fixtures/README.md`、`examples/acc/fixtures/legacy-page/.gitkeep`、`examples/acc/fixtures/modern-target/.gitkeep`、`examples/minimal-project/src/.gitkeep`、`examples/minimal-project/tests/.gitkeep`、`tests/fixtures/reference-projects.test.ts`。
+- Non-goals：不讀取真實 ACC repo；不建立 onboarding loader；不實作 migration workflow；不加入真實 route / API / private URL。
+- Checks / tests：`pnpm build`；`pnpm test`；`pnpm test:contract`；`pnpm test:cli`；`pnpm test:smoke`。
+- 風險與避免方式：避免 fixture 混入 private data；只新增 placeholder 目錄與 synthetic README，測試僅檢查 fixture shell。
+
 ## Completed
 
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
@@ -85,6 +95,7 @@
 - FW-P0-005：建立 root Vitest config 與 unit / contract / CLI / smoke test scripts。
 - FW-P0-006：建立 `.forgeweave` runtime fixture layout 與 fixture layout test。
 - FW-P0-007：建立 task status flow 文件，補齊 worklog template 與 phase gate 狀態串接。
+- FW-P0-008：建立 / 確認 ACC 與 minimal-project fixture shell，加入 reference fixture smoke test。
 
 ## Changed Files
 
@@ -123,6 +134,13 @@
 - `docs/tasks/status-flow.md`
 - `docs/worklogs/README.md`
 - `docs/worklogs/worklog-template.md`
+- `examples/acc/fixtures/README.md`
+- `examples/acc/fixtures/legacy-page/.gitkeep`
+- `examples/acc/fixtures/modern-target/.gitkeep`
+- `examples/minimal-project/src/.gitkeep`
+- `examples/minimal-project/tests/.gitkeep`
+- `tests/fixtures/reference-projects.test.ts`
+- `docs/planning/current-focus.md`
 
 ## Commands / Checks
 
@@ -154,6 +172,11 @@
 | `pnpm test:smoke` | Pass | CLI help/version smoke check 通過。 |
 | `pnpm build` | Pass | docs-only task，確認 workspace build 未受影響。 |
 | `pnpm test` | Pass | docs-only task，確認 test harness 未受影響。 |
+| `pnpm build` | Pass | workspace build 通過。 |
+| `pnpm test` | Pass | 包含 reference fixture shell smoke test。 |
+| `pnpm test:contract` | Pass | contracts schema placeholder test 通過。 |
+| `pnpm test:cli` | Pass | CLI help/version unit test 通過。 |
+| `pnpm test:smoke` | Pass | CLI help/version smoke check 通過。 |
 
 ## Acceptance Criteria Status
 
@@ -164,6 +187,7 @@
 - [x] FW-P0-005 acceptance criteria
 - [x] FW-P0-006 acceptance criteria
 - [x] FW-P0-007 acceptance criteria
+- [x] FW-P0-008 acceptance criteria
 
 ## Blocking Items
 
@@ -175,7 +199,7 @@
 
 ## Next Task
 
-- FW-P0-008 — 建立 ACC 與 minimal-project fixture shell
+- Phase 0 completed；停止，不自動進入 Phase 1
 
 ## Commit Message
 
@@ -187,4 +211,5 @@ phase-0: FW-P0-004 add cli skeleton
 phase-0: FW-P0-005 add test harness
 phase-0: FW-P0-006 add runtime fixture layout
 phase-0: FW-P0-007 add task status flow docs
+phase-0: FW-P0-008 add reference fixture shells
 ```
