@@ -1,0 +1,30 @@
+project:
+  id: acc-fixture
+  name: ACC Fixture
+  type: angular-enterprise-fixture
+  framework: angular
+  language: typescript
+
+validation:
+  mode: fixture
+  real_project_root_env: FORGEWEAVE_ACC_ROOT
+
+commands:
+  install: npm ci
+  lint: npm run lint
+  test: npm run test
+  build: npm run build
+
+workflows:
+  enabled:
+    - generic.review
+    - generic.bug-fix
+    - generic.new-feature
+    - acc.single-page-legacy-migration
+
+policies:
+  external_network_default: blocked
+  human_review_required_for:
+    - migration
+    - refactor
+    - optimization

@@ -1,0 +1,26 @@
+# Reference project 設定範例
+# 實際路徑請透過 .env.local 或 Codex environment variables 提供，不要 commit 真實本機路徑。
+
+reference_projects:
+  acc:
+    role: first-reference-project
+    description: ACC 是 ForgeWeave 的第一個外部參考驗證專案。
+    root_env: FORGEWEAVE_ACC_ROOT
+    default_fixture: examples/acc
+    allowed_modes:
+      - fixture
+      - live-readonly
+      - live-patch
+    write_policy:
+      fixture: disallowed
+      live-readonly: disallowed
+      live-patch: patch-mode-with-review-gate-only
+
+  second_project:
+    role: cross-project-validation
+    description: 用來驗證 core 不被 ACC / Angular 綁死。
+    root_env: FORGEWEAVE_SECOND_PROJECT_ROOT
+    default_fixture: examples/minimal-project
+    allowed_modes:
+      - fixture
+      - live-readonly

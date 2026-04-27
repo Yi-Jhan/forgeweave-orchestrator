@@ -1,0 +1,21 @@
+project:
+  id: minimal-project-fixture
+  name: Minimal Project Fixture
+  type: node-typescript-fixture
+  framework: none
+  language: typescript
+
+validation:
+  mode: fixture
+  real_project_root_env: FORGEWEAVE_SECOND_PROJECT_ROOT
+
+commands:
+  install: npm ci
+  lint: npm run lint
+  test: npm run test
+  build: npm run build
+
+workflows:
+  enabled:
+    - generic.review
+    - generic.bug-fix

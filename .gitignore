@@ -1,0 +1,31 @@
+# 依賴與建置輸出
+node_modules/
+dist/
+build/
+coverage/
+.tmp/
+.cache/
+
+# 本機環境設定：不得 commit 真實 ACC 路徑、token、私有服務位置
+.env
+.env.local
+.env.*.local
+
+# ForgeWeave 本機執行資料
+.forgeweave/runs/
+.forgeweave/artifacts/
+.forgeweave/events/
+.forgeweave/logs/
+.forgeweave/local.*
+
+# Codex / automation 執行紀錄，可依團隊政策選擇是否保留
+.codex/runs/
+
+# 本機文件與私有驗證紀錄
+docs/local/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+.idea/

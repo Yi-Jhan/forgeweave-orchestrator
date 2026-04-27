@@ -1,0 +1,41 @@
+forgeweave-orchestrator-clean-starter/
+├─ config/
+│  └─ reference-projects.example.yml
+├─ docs/
+│  ├─ planning/
+│  │  ├─ current-focus.md
+│  │  ├─ execution-charter.md
+│  │  ├─ parking-lot.md
+│  │  └─ workflow-cycle.md
+│  ├─ projects/
+│  │  └─ acc/
+│  │     └─ project-profile.md
+│  ├─ prompts/
+│  │  ├─ prompt-index.md
+│  │  ├─ run-phase-0-autonomous.md
+│  │  ├─ run-phase-1-autonomous.md
+│  │  ├─ run-phase-2-autonomous.md
+│  │  ├─ run-phase-3-autonomous.md
+│  │  └─ run-phase-4-autonomous.md
+│  ├─ roadmap/
+│  │  └─ blueprint.md
+│  ├─ specs/
+│  │  └─ spec.md
+│  ├─ tasks/
+│  │  ├─ active-task.md
+│  │  ├─ phase-gates.md
+│  │  └─ task-list.md
+│  └─ worklogs/
+│     ├─ README.md
+│     ├─ worklog-current.md
+│     └─ worklog-template.md
+├─ examples/
+│  ├─ acc/
+│  │  ├─ forgeweave.manifest.example.yml
+│  │  └─ README.md
+│  └─ minimal-project/
+│     ├─ forgeweave.manifest.example.yml
+│     └─ README.md
+├─ .env.example
+├─ .gitignore
+└─ README.md
