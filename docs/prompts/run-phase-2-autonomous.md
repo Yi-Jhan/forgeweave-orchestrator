@@ -40,6 +40,8 @@ Phase 2 完成後停止，不要自動進入下一個 Phase。
 
 若文件不存在，請記錄在 worklog；只有在缺失會造成 Phase 2 scope 無法判定時才停止。
 
+如需查詢完整架構背景，可閱讀 `docs/reference/original-blueprint.md`，但該文件只作參考，不得覆蓋本 Phase 的 scope、non-goals、task list 與 phase gate。
+
 
 ## Phase 2 Preflight
 

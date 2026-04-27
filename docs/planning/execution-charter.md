@@ -4,19 +4,18 @@
 
 ForgeWeave Orchestrator 是工具本體 repo。ACC 是第一參考專案與外部驗證目標，不是本 repo 的內建原始碼。
 
-## 優先順序
+## 文件優先順序
 
 若文件之間發生衝突，依照以下順序判斷：
 
-```text
-執行章程
-> 當前 Phase Gate
-> Active Task
-> Task Acceptance Criteria
-> Spec
-> Blueprint
-> Project Profile
-```
+1. `docs/planning/execution-charter.md`
+2. `docs/tasks/phase-gates.md`
+3. `docs/tasks/task-list.md`
+4. `docs/specs/spec.md`
+5. `docs/roadmap/blueprint.md`
+6. `docs/reference/original-blueprint.md`
+
+`docs/reference/original-blueprint.md` 只作完整架構背景、歷史脈絡與長期方向參考，不是 Phase Runner 的直接施工依據。若 original blueprint 與目前 Phase scope、non-goals、task list、phase gate、spec 或簡化版 blueprint 衝突，以前述較高順位文件為準。
 
 ## Reference Project Access Policy
 
