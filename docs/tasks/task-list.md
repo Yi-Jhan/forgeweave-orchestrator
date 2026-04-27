@@ -87,8 +87,8 @@
 
 | ID | Slice | 任務 | 依賴 | 驗收重點 | 狀態 |
 | --- | --- | --- | --- | --- | --- |
-| FW-P3B-001 | Feature Contracts | 定義 requirement-brief / feature-spec / implementation-plan schema | FW-P3A-006 | small scope、assumptions、target files、acceptance criteria | Todo |
-| FW-P3B-002 | Scope Control | 實作 small-scope guard | FW-P3A-003, FW-P3B-001 | 過大 / 多模組需求會被阻擋或標風險 | Todo |
+| FW-P3B-001 | Feature Contracts | 定義 requirement-brief / feature-spec / implementation-plan schema | FW-P3A-006 | small scope、assumptions、target files、acceptance criteria | Committed |
+| FW-P3B-002 | Scope Control | 實作 small-scope guard | FW-P3A-003, FW-P3B-001 | 過大 / 多模組需求會被阻擋或標風險 | Committed |
 | FW-P3B-003 | Workflow | 定義 `generic.new-feature` workflow | FW-P3B-001, FW-P3A-008 | requirement → spec/plan → patch → validate → review → summary | Todo |
 | FW-P3B-004 | Patch Mode | 支援 controlled new file + modify file patch mode | FW-P3A-007, FW-P3B-002 | 新增/修改檔案都在 allowlist 內 | Todo |
 | FW-P3B-005 | ACC Feature | ACC small new-feature CLI E2E | FW-P3B-003, FW-P3B-004 | validation + review gate | Todo |

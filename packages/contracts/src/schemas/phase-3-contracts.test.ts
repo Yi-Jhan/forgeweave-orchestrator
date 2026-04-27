@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { validateBugBrief, validateCommandSummary, validateFileChangeSet, validatePatchPlan } from "./phase-3-contracts.js";
+import {
+  validateBugBrief,
+  validateCommandSummary,
+  validateFeatureSpec,
+  validateFileChangeSet,
+  validateImplementationPlan,
+  validatePatchPlan,
+  validateRequirementBrief
+} from "./phase-3-contracts.js";
 import { validateWorkflowDefinition } from "./workflow-definition.js";
 
 describe("phase 3 contracts", () => {
@@ -72,6 +80,44 @@ describe("phase 3 contracts", () => {
         ],
         reviewPolicy: { required: true, decisions: ["approve", "reject"] },
         runtimePolicy: { defaultProvider: "mock", workspaceWrite: "controlled" }
+      }).valid
+    ).toBe(true);
+  });
+
+  it("validates small new-feature contracts", () => {
+    expect(
+      validateRequirementBrief({
+        schemaVersion: "1.0.0",
+        kind: "requirement-brief",
+        title: "Add fixture helper",
+        description: "Add a small helper file.",
+        targetFiles: ["src/feature-helper.ts"],
+        acceptanceCriteria: ["Helper exports a label."],
+        assumptions: ["Fixture-only implementation"]
+      }).valid
+    ).toBe(true);
+
+    expect(
+      validateFeatureSpec({
+        schemaVersion: "1.0.0",
+        kind: "feature-spec",
+        scope: "small",
+        summary: "Add helper",
+        targetFiles: ["src/feature-helper.ts"],
+        acceptanceCriteria: ["Helper exports a label."],
+        assumptions: ["No runtime integration needed."],
+        nonGoals: ["No multi-module refactor."]
+      }).valid
+    ).toBe(true);
+
+    expect(
+      validateImplementationPlan({
+        schemaVersion: "1.0.0",
+        kind: "implementation-plan",
+        targetFiles: ["src/feature-helper.ts"],
+        steps: ["Create helper", "Run validation"],
+        validationCommands: ["lint", "test", "build"],
+        risks: ["Fixture-only validation"]
       }).valid
     ).toBe(true);
   });

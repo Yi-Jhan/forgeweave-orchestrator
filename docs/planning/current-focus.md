@@ -23,7 +23,7 @@ fixture
 Phase 2 Review-first MVP 已完成。Phase 3A Controlled Bug-fix / Patch-first 已完成，目前進行 Phase 3B Small New-feature / Enhancement。
 
 ```text
-FW-P3B-001：feature delivery contracts
+FW-P3B-003：generic.new-feature workflow
 ```
 
 Phase 3 完成後停止，不自動進入 Phase 4。

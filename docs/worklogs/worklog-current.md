@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 3 — Feature Delivery MVP
-- Task：FW-P3A-010 / FW-P3A-011 / FW-P3A-012（完成）
+- Task：FW-P3B-001 / FW-P3B-002（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P3B-001 / FW-P3B-002
+
+- 目標：建立 small new-feature / enhancement 的 contracts 與 small-scope guard，作為 `generic.new-feature` workflow 的前置安全邊界。
+- Acceptance criteria：requirement-brief、feature-spec、implementation-plan schema 有基本 validation tests；small-scope guard 可接受小範圍需求，阻擋描述過大、多檔案過多、migration / refactor / redesign 等大型需求；新檔與修改檔仍受 file allowlist / denylist policy 控制。
+- 預期修改檔案：`packages/contracts/src/schemas/phase-3-contracts.ts`、`packages/contracts/src/schemas/phase-3-contracts.test.ts`、`packages/contracts/src/index.ts`、`packages/core/src/index.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`packages/core/src/small-scope-guard.ts`、`packages/core/src/small-scope-guard.test.ts`。
+- Non-goals：不實作 `generic.new-feature` workflow；不新增 CLI E2E；不做多模組 feature；不進入 Phase 4 migration scope。
+- Checks / tests：`pnpm --filter @forgeweave/contracts test`；`pnpm --filter @forgeweave/contracts build`；`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`；`git diff --check`。
+- 風險與避免方式：guard 的關鍵字只作 Phase 3 MVP coarse filter，不宣稱完整需求理解；實際 patch 仍由 file policy 與 review gate 收斂。
 
 ## Task Execution Plan — FW-P3A-010 / FW-P3A-011 / FW-P3A-012
 
@@ -197,6 +207,8 @@
 
 ## Completed
 
+- FW-P3B-001：新增 requirement-brief、feature-spec、implementation-plan contracts 與 validation tests。
+- FW-P3B-002：新增 small-scope guard，可阻擋過大、多檔、denylist 與 migration/refactor/redesign 類需求。
 - FW-P3A-010：新增 rejected run 的 targeted validate rerun，會帶入 reject reason 並產出新的 command-summary / rerun-summary artifacts。
 - FW-P3A-011：CLI `status` 顯示 artifacts、failed step、reject reason 與 rerun 建議；新增 CLI `rerun` command。
 - FW-P3A-012：ACC fixture `generic.bug-fix` CLI E2E 通過，可產生 diff、command-summary、review gate 與 delivery summary。
@@ -319,6 +331,10 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm --filter @forgeweave/contracts test` | Pass | Phase 3B feature contracts validation tests 通過。 |
+| `pnpm --filter @forgeweave/contracts build` | Pass | feature contracts exports build 通過。 |
+| `pnpm --filter @forgeweave/core test` | Pass | small-scope guard tests 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | contracts build 完成後重跑 core build 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | reject reason rerun tests 通過。 |
 | `pnpm --filter @forgeweave/cli test` | Pass | ACC fixture `generic.bug-fix` + reject/rerun CLI E2E 通過。 |
 | `pnpm --filter @forgeweave/core build` | Pass | rerun export build 通過。 |
@@ -424,6 +440,8 @@
 - [x] FW-P3A-010 acceptance criteria
 - [x] FW-P3A-011 acceptance criteria
 - [x] FW-P3A-012 acceptance criteria
+- [x] FW-P3B-001 acceptance criteria
+- [x] FW-P3B-002 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -458,7 +476,7 @@
 
 ## Next Task
 
-- FW-P3B-001：定義 requirement-brief / feature-spec / implementation-plan schema
+- FW-P3B-003：定義 `generic.new-feature` workflow
 
 ## Commit Message
 
@@ -467,6 +485,7 @@ phase-2: complete review-first gate
 phase-3: FW-P3A-001-003 add write safety guards
 phase-3: FW-P3A-004-009 add bug-fix patch workflow
 phase-3: FW-P3A-010-012 add bug-fix CLI recovery
+phase-3: FW-P3B-001-002 add feature scope contracts
 phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store

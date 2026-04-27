@@ -111,6 +111,60 @@ export const commandSummarySchema = {
   }
 } as const;
 
+export const requirementBriefSchema = {
+  $schema: "https://json-schema.org/draft/2020-12/schema",
+  $id: "https://forgeweave.dev/schemas/requirement-brief.schema.json",
+  title: "ForgeWeaveRequirementBrief",
+  type: "object",
+  required: ["schemaVersion", "kind", "title", "description", "targetFiles", "acceptanceCriteria", "assumptions"],
+  additionalProperties: false,
+  properties: {
+    schemaVersion: { type: "string", const: "1.0.0" },
+    kind: { type: "string", const: "requirement-brief" },
+    title: { type: "string", minLength: 1 },
+    description: { type: "string", minLength: 1 },
+    targetFiles: { type: "array", items: { type: "string", minLength: 1 }, minItems: 1 },
+    acceptanceCriteria: { type: "array", items: { type: "string", minLength: 1 }, minItems: 1 },
+    assumptions: { type: "array", items: { type: "string", minLength: 1 } }
+  }
+} as const;
+
+export const featureSpecSchema = {
+  $schema: "https://json-schema.org/draft/2020-12/schema",
+  $id: "https://forgeweave.dev/schemas/feature-spec.schema.json",
+  title: "ForgeWeaveFeatureSpec",
+  type: "object",
+  required: ["schemaVersion", "kind", "scope", "summary", "targetFiles", "acceptanceCriteria", "assumptions", "nonGoals"],
+  additionalProperties: false,
+  properties: {
+    schemaVersion: { type: "string", const: "1.0.0" },
+    kind: { type: "string", const: "feature-spec" },
+    scope: { type: "string", enum: ["small"] },
+    summary: { type: "string", minLength: 1 },
+    targetFiles: { type: "array", items: { type: "string", minLength: 1 }, minItems: 1 },
+    acceptanceCriteria: { type: "array", items: { type: "string", minLength: 1 }, minItems: 1 },
+    assumptions: { type: "array", items: { type: "string", minLength: 1 } },
+    nonGoals: { type: "array", items: { type: "string", minLength: 1 } }
+  }
+} as const;
+
+export const implementationPlanSchema = {
+  $schema: "https://json-schema.org/draft/2020-12/schema",
+  $id: "https://forgeweave.dev/schemas/implementation-plan.schema.json",
+  title: "ForgeWeaveImplementationPlan",
+  type: "object",
+  required: ["schemaVersion", "kind", "targetFiles", "steps", "validationCommands", "risks"],
+  additionalProperties: false,
+  properties: {
+    schemaVersion: { type: "string", const: "1.0.0" },
+    kind: { type: "string", const: "implementation-plan" },
+    targetFiles: { type: "array", items: { type: "string", minLength: 1 }, minItems: 1 },
+    steps: { type: "array", items: { type: "string", minLength: 1 }, minItems: 1 },
+    validationCommands: { type: "array", items: { type: "string", enum: ["lint", "test", "build"] } },
+    risks: { type: "array", items: { type: "string", minLength: 1 } }
+  }
+} as const;
+
 export type BugBrief = {
   schemaVersion: "1.0.0";
   kind: "bug-brief";
@@ -176,6 +230,36 @@ export type CommandSummary = {
   commands: CommandRunRecord[];
 };
 
+export type RequirementBrief = {
+  schemaVersion: "1.0.0";
+  kind: "requirement-brief";
+  title: string;
+  description: string;
+  targetFiles: string[];
+  acceptanceCriteria: string[];
+  assumptions: string[];
+};
+
+export type FeatureSpec = {
+  schemaVersion: "1.0.0";
+  kind: "feature-spec";
+  scope: "small";
+  summary: string;
+  targetFiles: string[];
+  acceptanceCriteria: string[];
+  assumptions: string[];
+  nonGoals: string[];
+};
+
+export type ImplementationPlan = {
+  schemaVersion: "1.0.0";
+  kind: "implementation-plan";
+  targetFiles: string[];
+  steps: string[];
+  validationCommands: ("lint" | "test" | "build")[];
+  risks: string[];
+};
+
 export type Phase3ValidationResult = {
   valid: boolean;
   errors: string[];
@@ -210,6 +294,14 @@ function validateBriefLike(value: unknown, kind: string): Phase3ValidationResult
 
 export function validateBugBrief(value: unknown): Phase3ValidationResult {
   return validateBriefLike(value, "bug-brief");
+}
+
+export function validateRequirementBrief(value: unknown): Phase3ValidationResult {
+  const result = validateBriefLike(value, "requirement-brief");
+  if (!isRecord(value)) return result;
+  const errors = [...result.errors];
+  if (!isStringArray(value.assumptions)) errors.push("assumptions must be a string array");
+  return { valid: errors.length === 0, errors };
 }
 
 export function validatePatchPlan(value: unknown): Phase3ValidationResult {
@@ -278,6 +370,39 @@ export function validateCommandSummary(value: unknown): Phase3ValidationResult {
   return { valid: errors.length === 0, errors };
 }
 
+export function validateFeatureSpec(value: unknown): Phase3ValidationResult {
+  const errors: string[] = [];
+  if (!isRecord(value)) return { valid: false, errors: ["feature spec must be an object"] };
+  if (value.schemaVersion !== "1.0.0") errors.push("schemaVersion must be 1.0.0");
+  if (value.kind !== "feature-spec") errors.push("kind must be feature-spec");
+  if (value.scope !== "small") errors.push("scope must be small");
+  if (!isNonEmptyString(value.summary)) errors.push("summary must be a non-empty string");
+  if (!isStringArray(value.targetFiles, 1)) errors.push("targetFiles must be a non-empty string array");
+  if (!isStringArray(value.acceptanceCriteria, 1)) {
+    errors.push("acceptanceCriteria must be a non-empty string array");
+  }
+  if (!isStringArray(value.assumptions)) errors.push("assumptions must be a string array");
+  if (!isStringArray(value.nonGoals)) errors.push("nonGoals must be a string array");
+  return { valid: errors.length === 0, errors };
+}
+
+export function validateImplementationPlan(value: unknown): Phase3ValidationResult {
+  const errors: string[] = [];
+  if (!isRecord(value)) return { valid: false, errors: ["implementation plan must be an object"] };
+  if (value.schemaVersion !== "1.0.0") errors.push("schemaVersion must be 1.0.0");
+  if (value.kind !== "implementation-plan") errors.push("kind must be implementation-plan");
+  if (!isStringArray(value.targetFiles, 1)) errors.push("targetFiles must be a non-empty string array");
+  if (!isStringArray(value.steps, 1)) errors.push("steps must be a non-empty string array");
+  if (
+    !Array.isArray(value.validationCommands) ||
+    value.validationCommands.some((command) => !["lint", "test", "build"].includes(String(command)))
+  ) {
+    errors.push("validationCommands must contain lint/test/build names");
+  }
+  if (!isStringArray(value.risks)) errors.push("risks must be a string array");
+  return { valid: errors.length === 0, errors };
+}
+
 export function isBugBrief(value: unknown): value is BugBrief {
   return validateBugBrief(value).valid;
 }
@@ -292,4 +417,16 @@ export function isFileChangeSet(value: unknown): value is FileChangeSet {
 
 export function isCommandSummary(value: unknown): value is CommandSummary {
   return validateCommandSummary(value).valid;
+}
+
+export function isRequirementBrief(value: unknown): value is RequirementBrief {
+  return validateRequirementBrief(value).valid;
+}
+
+export function isFeatureSpec(value: unknown): value is FeatureSpec {
+  return validateFeatureSpec(value).valid;
+}
+
+export function isImplementationPlan(value: unknown): value is ImplementationPlan {
+  return validateImplementationPlan(value).valid;
 }

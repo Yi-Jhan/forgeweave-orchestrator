@@ -97,6 +97,11 @@ export {
   type RerunRejectedStepResult
 } from "./rerun.js";
 export {
+  evaluateSmallScope,
+  type SmallScopeEvaluation,
+  type SmallScopeGuardOptions
+} from "./small-scope-guard.js";
+export {
   createControlledWorkdir,
   type ControlledWorkdir,
   type CreateControlledWorkdirOptions
