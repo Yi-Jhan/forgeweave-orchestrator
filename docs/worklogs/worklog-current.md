@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 2 — Review-first MVP
-- Task：FW-P2-001 / FW-P2-002 / FW-P2-003 / FW-P2-004 / FW-P2-006 / FW-P2-008 — contracts、state machine、runtime contract cluster（完成）
+- Task：FW-P2-005 — local JSON/JSONL artifact/event store（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P2-005
+
+- 目標：建立 Phase 2 local workflow store，讓 run、step、artifact、event、review decision metadata 可以以 JSON / JSONL 保存並讀回。
+- Acceptance criteria：可保存並讀回 run state；可保存並讀回 step state；workflow artifact 可保存 / 列出 / 讀回；event envelope 以 JSONL append 並讀回；review decision 含 reject reason 可保存。
+- 預期修改檔案：`packages/core/src/index.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`packages/core/src/local-store.ts`、`packages/core/src/local-store.test.ts`。
+- Non-goals：不實作 workflow runner；不建立 workspace-write；不實作 migration/patch storage；不設計 replay/resume v1。
+- Checks / tests：`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`。
+- 風險與避免方式：避免 storage 寫進真實 reference project source；測試使用本機 temp directory，Phase 2 runner 後續以 output root 管理 artifacts。
 
 ## Task Execution Plan — FW-P2-001 / FW-P2-002 / FW-P2-003 / FW-P2-004 / FW-P2-006 / FW-P2-008
 
@@ -132,6 +142,7 @@
 - FW-P2-002：新增 workflow artifact schema、type 與 validation helper。
 - FW-P2-003：新增最小 run/step state machine，含 legal / illegal transition tests。
 - FW-P2-004：新增 workflow event envelope schema、type 與 validation helper。
+- FW-P2-005：新增 local JSON/JSONL workflow store，可保存 run、step、artifact、event 與 review decision metadata。
 - FW-P2-006：新增 AgentRuntimeProvider contract v0，支援 createSession、runStep、optional resume/close。
 - FW-P2-008：新增 review-findings 與 delivery-summary schema、type 與 validation helper。
 - FW-P1-001：新增 project manifest schema、type 與 validation helper。
@@ -233,6 +244,8 @@
 | `pnpm --filter @forgeweave/core test` | Pass | Phase 2 state machine tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | contracts 新 export build 通過。 |
 | `pnpm --filter @forgeweave/core build` | Pass | core state/runtime contract export build 通過。 |
+| `pnpm --filter @forgeweave/core test` | Pass | local workflow store persistence test 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | local store export build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
 | `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
@@ -283,6 +296,7 @@
 - [x] FW-P2-002 acceptance criteria
 - [x] FW-P2-003 acceptance criteria
 - [x] FW-P2-004 acceptance criteria
+- [x] FW-P2-005 acceptance criteria
 - [x] FW-P2-006 acceptance criteria
 - [x] FW-P2-008 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
@@ -319,11 +333,12 @@
 
 ## Next Task
 
-- FW-P2-005：實作 local JSON/JSONL artifact/event store
+- FW-P2-007 / FW-P2-009 / FW-P2-010：MockRuntimeProvider、workflow runner skeleton、`generic.review` workflow
 
 ## Commit Message
 
 ```text
+phase-2: FW-P2-005 add local workflow store
 phase-2: FW-P2-contracts add review workflow contracts
 phase-0: FW-P0-001 initialize monorepo baseline
 phase-0: FW-P0-002 add typescript tooling baseline

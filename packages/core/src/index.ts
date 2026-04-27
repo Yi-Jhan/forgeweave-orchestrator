@@ -52,3 +52,8 @@ export {
   type RuntimeStepContext,
   type RuntimeStepResult
 } from "./runtime-provider.js";
+export {
+  createLocalWorkflowStore,
+  type LocalWorkflowStore,
+  type ReviewDecisionRecord
+} from "./local-store.js";
