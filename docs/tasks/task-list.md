@@ -48,14 +48,14 @@
 
 | ID | Slice | 任務 | 依賴 | 驗收重點 | 狀態 |
 | --- | --- | --- | --- | --- | --- |
-| FW-P2-001 | Workflow Contract | 定義 workflow definition schema | FW-P1-001 | step kind、inputs、outputs、review policy、runtime policy | Todo |
-| FW-P2-002 | Artifact Contract | 定義 base artifact / workflow artifact schema | FW-P0-003 | status、refs、payload、producedBy 可驗證 | Todo |
-| FW-P2-003 | State | 實作最小 run/step state machine | FW-P2-001 | legal/illegal transitions 有測試 | Todo |
-| FW-P2-004 | Event | 實作最小 event envelope | FW-P2-003 | run/step/artifact/review lifecycle events | Todo |
+| FW-P2-001 | Workflow Contract | 定義 workflow definition schema | FW-P1-001 | step kind、inputs、outputs、review policy、runtime policy | Committed |
+| FW-P2-002 | Artifact Contract | 定義 base artifact / workflow artifact schema | FW-P0-003 | status、refs、payload、producedBy 可驗證 | Committed |
+| FW-P2-003 | State | 實作最小 run/step state machine | FW-P2-001 | legal/illegal transitions 有測試 | Committed |
+| FW-P2-004 | Event | 實作最小 event envelope | FW-P2-003 | run/step/artifact/review lifecycle events | Committed |
 | FW-P2-005 | Storage | 實作 local JSON/JSONL artifact/event store | FW-P2-002, FW-P2-004 | 可保存並讀回 run/step/artifact/event/review metadata | Todo |
-| FW-P2-006 | Runtime | 定義 AgentRuntimeProvider contract | FW-P1-011 | createSession、runStep、resume/close optional | Todo |
+| FW-P2-006 | Runtime | 定義 AgentRuntimeProvider contract | FW-P1-011 | createSession、runStep、resume/close optional | Committed |
 | FW-P2-007 | Mock Runtime | 實作 MockRuntimeProvider review fixtures | FW-P2-006 | deterministic review findings 與 runtime events | Todo |
-| FW-P2-008 | Review Artifacts | 定義 review-findings / delivery-summary schema | FW-P2-002 | findings、severity、risks、next actions | Todo |
+| FW-P2-008 | Review Artifacts | 定義 review-findings / delivery-summary schema | FW-P2-002 | findings、severity、risks、next actions | Committed |
 | FW-P2-009 | Runner | 實作 workflow runner skeleton | FW-P2-001, FW-P2-003, FW-P2-006 | system/agent/human-review steps lifecycle | Todo |
 | FW-P2-010 | Workflow | 定義 `generic.review` workflow | FW-P2-008, FW-P2-009 | load project → context → review-findings → review gate | Todo |
 | FW-P2-011 | Review Gate | 實作 CLI review approve/reject | FW-P2-009 | reject with reason 可保存 | Todo |

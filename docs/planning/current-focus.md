@@ -2,7 +2,7 @@
 
 ## Active Phase
 
-Phase 1 — Project Onboarding MVP（completed）
+Phase 2 — Review-first MVP（in progress）
 
 ## Active Validation Mode
 
@@ -20,10 +20,10 @@ fixture
 
 ## 下一步
 
-Phase 1 已完成並停止。下一個建議階段是 Phase 2 runner，但需由使用者明確啟動。
+Phase 1 Implementation Gate 已通過。使用者已明確啟動 Phase 2 runner，目前進行 Review-first MVP；Phase 2 完成後停止，不進入 Phase 3。
 
 ```text
 docs/prompts/run-phase-2-autonomous.md
 ```
 
-本次執行不自動進入 Phase 2。
+本次執行不自動進入 Phase 3。

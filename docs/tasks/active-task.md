@@ -2,15 +2,15 @@
 
 ## 目前狀態
 
-- Active Phase：Phase 1 — Project Onboarding MVP（completed）
-- Active Task：Phase 1 completed；停止於 Phase 1，不進入 Phase 2
+- Active Phase：Phase 2 — Review-first MVP（in progress）
+- Active Task：FW-P2-005 — local JSON/JSONL artifact/event store
 - Validation Mode：fixture
 - ACC Live Root：由 `FORGEWEAVE_ACC_ROOT` 外部提供，目前未設定
 
 ## 最近一次 Codex 執行結果
 
-Phase 0 Gate 已通過。Phase 1 Project Onboarding MVP implementation gate 已完成。`forgeweave init --dry-run` 可對 `examples/acc`、`examples/minimal-project` 與 `.env.local` 指定的 ACC live-readonly root 執行，並產出 onboarding summary；dry-run 未寫入 fixture 或外部 ACC artifacts。
+Phase 1 Implementation Gate 已確認通過。Phase 2 第一個 contract/state/runtime contract cluster 已完成：workflow definition、workflow artifact、event envelope、review-findings、delivery-summary schema，以及最小 run/step state machine 與 AgentRuntimeProvider contract。
 
 ## 下一步
 
-依使用者要求停止於 Phase 1。下一個建議階段是 Phase 2 runner，但本次不自動進入。
+繼續 Phase 2 runner；下一步處理 FW-P2-005 storage，再接 mock runtime / workflow runner / CLI。

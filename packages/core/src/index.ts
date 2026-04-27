@@ -36,3 +36,19 @@ export {
   type OnboardingReport,
   type RunProjectOnboardingOptions
 } from "./onboarding-report.js";
+export {
+  canTransitionRun,
+  canTransitionStep,
+  transitionRun,
+  transitionStep,
+  type RunStatus,
+  type StepStatus,
+  type WorkflowRunState,
+  type WorkflowStepState
+} from "./state-machine.js";
+export {
+  type AgentRuntimeProvider,
+  type RuntimeSession,
+  type RuntimeStepContext,
+  type RuntimeStepResult
+} from "./runtime-provider.js";

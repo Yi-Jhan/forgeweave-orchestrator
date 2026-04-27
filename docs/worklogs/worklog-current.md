@@ -2,9 +2,19 @@
 
 ## Active Focus
 
-- Phase：Phase 1 — Project Onboarding MVP
-- Task：FW-P1-003 / FW-P1-013 / FW-P1-014 / FW-P1-LIVE-001 — CLI init 與 fixture gate cluster（完成）
+- Phase：Phase 2 — Review-first MVP
+- Task：FW-P2-001 / FW-P2-002 / FW-P2-003 / FW-P2-004 / FW-P2-006 / FW-P2-008 — contracts、state machine、runtime contract cluster（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P2-001 / FW-P2-002 / FW-P2-003 / FW-P2-004 / FW-P2-006 / FW-P2-008
+
+- 目標：建立 Phase 2 review-first workflow 的最小 contracts 與核心狀態基礎，讓後續 storage、runner、CLI 可以共用一致資料形狀。
+- Acceptance criteria：workflow definition 可驗證 step kind、inputs、outputs、review policy、runtime policy；workflow artifact 可驗證 status、refs、payload、producedBy；run/step legal/illegal transitions 有測試；event envelope 支援 run/step/artifact/review lifecycle；AgentRuntimeProvider contract 包含 createSession、runStep、optional resume/close；review-findings / delivery-summary schema 可驗證 findings、severity、risks、next actions。
+- 預期修改檔案：`packages/contracts/src/index.ts`、`packages/core/src/index.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/planning/current-focus.md`。
+- 預期新增檔案：`packages/contracts/src/schemas/workflow-definition.ts`、`packages/contracts/src/schemas/workflow-artifact.ts`、`packages/contracts/src/schemas/workflow-event.ts`、`packages/contracts/src/schemas/review-artifacts.ts`、`packages/contracts/src/schemas/phase-2-contracts.test.ts`、`packages/core/src/state-machine.ts`、`packages/core/src/runtime-provider.ts`、`packages/core/src/state-machine.test.ts`。
+- Non-goals：不實作 storage；不實作 workflow runner；不加入 CLI command；不寫入 project workspace；不實作 Phase 3 patch / command runner。
+- Checks / tests：`pnpm --filter @forgeweave/contracts test`；`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/contracts build`；`pnpm --filter @forgeweave/core build`。
+- 風險與避免方式：避免 workflow schema 允許 workspace-write；runtime policy 僅接受 `workspaceWrite: disallowed`，狀態機維持 Phase 2 最小轉換，不提前實作 resume/retry。
 
 ## Task Execution Plan — FW-P1-001 / FW-P1-006 / FW-P1-009
 
@@ -118,6 +128,12 @@
 
 ## Completed
 
+- FW-P2-001：新增 workflow definition schema、type 與 validation helper。
+- FW-P2-002：新增 workflow artifact schema、type 與 validation helper。
+- FW-P2-003：新增最小 run/step state machine，含 legal / illegal transition tests。
+- FW-P2-004：新增 workflow event envelope schema、type 與 validation helper。
+- FW-P2-006：新增 AgentRuntimeProvider contract v0，支援 createSession、runStep、optional resume/close。
+- FW-P2-008：新增 review-findings 與 delivery-summary schema、type 與 validation helper。
 - FW-P1-001：新增 project manifest schema、type 與 validation helper。
 - FW-P1-002：新增 manifest finder / loader / normalizer，支援 fixture YAML manifest。
 - FW-P1-003：新增 `forgeweave init` CLI onboarding flow，支援 `--project-root`、`--dry-run`、`--write`。
@@ -213,6 +229,10 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm --filter @forgeweave/contracts test` | Pass | Phase 2 workflow/artifact/event/review artifact schema validation tests 通過。 |
+| `pnpm --filter @forgeweave/core test` | Pass | Phase 2 state machine tests 通過。 |
+| `pnpm --filter @forgeweave/contracts build` | Pass | contracts 新 export build 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | core state/runtime contract export build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
 | `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
@@ -259,6 +279,12 @@
 
 ## Acceptance Criteria Status
 
+- [x] FW-P2-001 acceptance criteria
+- [x] FW-P2-002 acceptance criteria
+- [x] FW-P2-003 acceptance criteria
+- [x] FW-P2-004 acceptance criteria
+- [x] FW-P2-006 acceptance criteria
+- [x] FW-P2-008 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -293,11 +319,12 @@
 
 ## Next Task
 
-- Phase 1 completed；停止，不自動進入 Phase 2
+- FW-P2-005：實作 local JSON/JSONL artifact/event store
 
 ## Commit Message
 
 ```text
+phase-2: FW-P2-contracts add review workflow contracts
 phase-0: FW-P0-001 initialize monorepo baseline
 phase-0: FW-P0-002 add typescript tooling baseline
 phase-0: FW-P0-003 add contracts package skeleton
