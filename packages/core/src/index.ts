@@ -1,6 +1,8 @@
 export {
   findProjectManifest,
+  generateProjectManifest,
   loadProjectManifest,
+  loadOrGenerateProjectManifest,
   normalizeProjectManifest,
   parseSimpleYaml,
   type LoadedProjectManifest

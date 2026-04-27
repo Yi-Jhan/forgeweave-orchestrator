@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 
 import {
   validateProjectManifest,
@@ -18,6 +18,7 @@ const manifestCandidates = [
 export type LoadedProjectManifest = {
   manifestPath: string;
   manifest: ProjectManifest;
+  source: "file" | "generated";
 };
 
 type ParseFrame = {
@@ -170,6 +171,62 @@ export function loadProjectManifest(projectRoot: string): LoadedProjectManifest 
 
   return {
     manifestPath,
-    manifest: normalizeProjectManifest(readManifestFile(manifestPath))
+    manifest: normalizeProjectManifest(readManifestFile(manifestPath)),
+    source: "file"
   };
+}
+
+function safeProjectId(projectRoot: string): string {
+  return basename(resolve(projectRoot))
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "project";
+}
+
+function readPackageName(projectRoot: string): string | undefined {
+  const packagePath = join(resolve(projectRoot), "package.json");
+  if (!existsSync(packagePath)) return undefined;
+  const packageJson = JSON.parse(readFileSync(packagePath, "utf8")) as { name?: unknown };
+  return typeof packageJson.name === "string" && packageJson.name.length > 0 ? packageJson.name : undefined;
+}
+
+export function generateProjectManifest(projectRoot: string): LoadedProjectManifest {
+  const absoluteRoot = resolve(projectRoot);
+  const hasTsConfig = existsSync(join(absoluteRoot, "tsconfig.json"));
+  const hasAngularConfig = existsSync(join(absoluteRoot, "angular.json"));
+  const packageName = readPackageName(absoluteRoot);
+
+  return {
+    manifestPath: "<generated>",
+    source: "generated",
+    manifest: normalizeProjectManifest({
+      project: {
+        id: safeProjectId(absoluteRoot),
+        name: packageName ?? basename(absoluteRoot),
+        type: hasAngularConfig ? "angular-project" : "generic-project",
+        framework: hasAngularConfig ? "angular" : "none",
+        language: hasTsConfig ? "typescript" : "unknown"
+      },
+      validation: {
+        mode: "live-readonly",
+        realProjectRootEnv: "FORGEWEAVE_ACC_ROOT"
+      },
+      commands: {},
+      workflows: {
+        enabled: ["generic.review"]
+      },
+      policies: {
+        externalNetworkDefault: "blocked",
+        humanReviewRequiredFor: []
+      }
+    })
+  };
+}
+
+export function loadOrGenerateProjectManifest(projectRoot: string): LoadedProjectManifest {
+  const manifestPath = findProjectManifest(projectRoot);
+  if (manifestPath !== undefined) {
+    return loadProjectManifest(projectRoot);
+  }
+  return generateProjectManifest(projectRoot);
 }

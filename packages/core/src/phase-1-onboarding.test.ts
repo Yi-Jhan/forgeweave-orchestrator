@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { buildOnboardingReport, loadProjectManifest, runMockProviderPreflight } from "./index.js";
+import { buildOnboardingReport, generateProjectManifest, loadProjectManifest, runMockProviderPreflight } from "./index.js";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const accFixtureRoot = resolve(repoRoot, "examples/acc");
@@ -15,6 +15,15 @@ describe("phase 1 onboarding core", () => {
     expect(loaded.manifest.project.id).toBe("acc-fixture");
     expect(loaded.manifest.schemaVersion).toBe("1.0.0");
     expect(loaded.manifest.validation.realProjectRootEnv).toBe("FORGEWEAVE_ACC_ROOT");
+    expect(loaded.source).toBe("file");
+  });
+
+  it("generates an in-memory manifest when a live project has no manifest", () => {
+    const generated = generateProjectManifest(minimalFixtureRoot);
+
+    expect(generated.manifestPath).toBe("<generated>");
+    expect(generated.source).toBe("generated");
+    expect(generated.manifest.validation.mode).toBe("live-readonly");
   });
 
   it("builds an onboarding report for the ACC fixture", () => {

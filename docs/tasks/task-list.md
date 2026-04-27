@@ -42,7 +42,7 @@
 | FW-P1-012 | Report | 產出 onboarding report artifact | FW-P1-005, FW-P1-008, FW-P1-011 | manifest、adapter、asset gaps、provider gaps、next workflows | Committed |
 | FW-P1-013 | ACC Fixture | ACC fixture onboarding smoke test | FW-P1-012 | examples/acc 可產出 manifest/context/report/matrix | Committed |
 | FW-P1-014 | Second Project | minimal-project onboarding smoke test | FW-P1-012 | 不依賴 ACC adapter | Committed |
-| FW-P1-LIVE-001 | Live ACC | 真實 ACC live-readonly onboarding validation | FW-P1-012 | 需要 `FORGEWEAVE_ACC_ROOT`；未設定則 Blocked External | Blocked External |
+| FW-P1-LIVE-001 | Live ACC | 真實 ACC live-readonly onboarding validation | FW-P1-012 | 需要 `FORGEWEAVE_ACC_ROOT`；未設定則 Blocked External | Committed |
 
 ## Phase 2 — Review-first MVP
 

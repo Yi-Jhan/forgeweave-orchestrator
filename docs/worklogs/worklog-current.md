@@ -132,7 +132,7 @@
 - FW-P1-012：新增 onboarding report artifact builder。
 - FW-P1-013：ACC fixture onboarding smoke test 通過。
 - FW-P1-014：minimal-project onboarding smoke test 通過。
-- FW-P1-LIVE-001：`FORGEWEAVE_ACC_ROOT` 未設定，依 policy 標記為 `Blocked External`。
+- FW-P1-LIVE-001：`.env.local` 已提供 `FORGEWEAVE_ACC_ROOT`，live-readonly dry-run onboarding 通過；未記錄本機路徑且未寫入外部 ACC artifacts。
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
 - FW-P0-002：加入 TypeScript / Vitest baseline，建立 `@forgeweave/core` 最小可編譯 package。
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
@@ -224,6 +224,7 @@
 | `pnpm test:cli` | Pass | CLI help/version/init unit tests 通過。 |
 | `pnpm test:smoke` | Pass | CLI help/version 與 ACC/minimal `forgeweave init --dry-run` smoke checks 通過。 |
 | `pnpm --filter @forgeweave/cli smoke` | Pass | fixture init summary 可產出；dry-run 未建立 `.forgeweave` artifacts。 |
+| live-readonly `forgeweave init --dry-run` | Pass | 使用 `.env.local` 指定 ACC root；summary 可產出，外部 `.forgeweave` artifacts 未建立。 |
 | `pnpm install --lockfile-only` | Pass | 無 dependencies，未產生 lockfile。 |
 | `pnpm build` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
 | `pnpm test` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
@@ -272,7 +273,7 @@
 - [x] FW-P1-012 acceptance criteria
 - [x] FW-P1-013 acceptance criteria
 - [x] FW-P1-014 acceptance criteria
-- [x] FW-P1-LIVE-001 marked Blocked External
+- [x] FW-P1-LIVE-001 acceptance criteria
 - [x] FW-P0-001 acceptance criteria
 - [x] FW-P0-002 acceptance criteria
 - [x] FW-P0-003 acceptance criteria

@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 
 import { recommendAdapter, type AdapterRecommendation } from "./adapter-recommendation.js";
 import { generateContextPacket, type ContextPacket } from "./context-packet.js";
-import { loadProjectManifest, type LoadedProjectManifest } from "./manifest.js";
+import { loadOrGenerateProjectManifest, type LoadedProjectManifest } from "./manifest.js";
 import { resolveProviderAssets, type ProviderAssetResolution } from "./provider-assets.js";
 import { buildProviderCapabilityMatrix, runMockProviderPreflight, type ProviderCapabilityMatrix } from "./provider-preflight.js";
 import { detectProject, type ProjectSignals } from "./project-detector.js";
@@ -29,7 +29,7 @@ export type RunProjectOnboardingOptions = {
 
 export function buildOnboardingReport(projectRoot: string): OnboardingReport {
   const absoluteRoot = resolve(projectRoot);
-  const manifest = loadProjectManifest(absoluteRoot);
+  const manifest = loadOrGenerateProjectManifest(absoluteRoot);
   const signals = detectProject(absoluteRoot, manifest.manifest);
   const adapter = recommendAdapter(manifest.manifest, signals);
   const assetResolutions = resolveProviderAssets(absoluteRoot);

@@ -43,9 +43,9 @@
 
 若未設定，標記為 `blocked-external`，不阻擋 Phase 1 implementation gate。
 
-- [ ] 真實 ACC repo 可被偵測。（Blocked External：`FORGEWEAVE_ACC_ROOT` 未設定）
-- [ ] live-readonly onboarding dry-run 完成。（Blocked External：`FORGEWEAVE_ACC_ROOT` 未設定）
-- [ ] asset gap report 可產出且已 sanitized。（Blocked External：`FORGEWEAVE_ACC_ROOT` 未設定）
+- [x] 真實 ACC repo 可被偵測。（透過 `.env.local`，未記錄本機路徑）
+- [x] live-readonly onboarding dry-run 完成。
+- [x] asset gap report 可產出且已 sanitized。
 - [x] 不複製真實 ACC source 進 ForgeWeave repo。
 
 ## Phase 2 — Review-first MVP

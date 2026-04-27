@@ -12,9 +12,9 @@ fixture
 
 | 設定 | 狀態 |
 | --- | --- |
-| `FORGEWEAVE_ACC_ROOT` | not configured |
+| `FORGEWEAVE_ACC_ROOT` | configured via `.env.local` |
 | `FORGEWEAVE_SECOND_PROJECT_ROOT` | not configured |
-| `FORGEWEAVE_VALIDATION_MODE` | fixture |
+| `FORGEWEAVE_VALIDATION_MODE` | live-readonly via `.env.local` |
 
 真實 ACC repo path 由每個工作環境透過 `.env.local` 或 Codex environment variables 提供，不得寫入 committed 文件。
 

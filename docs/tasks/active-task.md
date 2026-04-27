@@ -9,7 +9,7 @@
 
 ## 最近一次 Codex 執行結果
 
-Phase 0 Gate 已通過。Phase 1 Project Onboarding MVP implementation gate 已完成。`forgeweave init --dry-run` 可對 `examples/acc` 與 `examples/minimal-project` 執行，並產出 onboarding summary；dry-run 未寫入 fixture artifacts。
+Phase 0 Gate 已通過。Phase 1 Project Onboarding MVP implementation gate 已完成。`forgeweave init --dry-run` 可對 `examples/acc`、`examples/minimal-project` 與 `.env.local` 指定的 ACC live-readonly root 執行，並產出 onboarding summary；dry-run 未寫入 fixture 或外部 ACC artifacts。
 
 ## 下一步
 
