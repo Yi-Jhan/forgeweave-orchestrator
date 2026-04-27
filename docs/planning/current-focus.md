@@ -2,7 +2,7 @@
 
 ## Active Phase
 
-Phase 2 — Review-first MVP（completed）
+Phase 3 — Feature Delivery MVP（in progress）
 
 ## Active Validation Mode
 
@@ -20,10 +20,10 @@ fixture
 
 ## 下一步
 
-Phase 2 Review-first MVP 已完成並停止。下一個建議階段是 Phase 3 runner，但需由使用者明確啟動。
+Phase 2 Review-first MVP 已完成。Phase 3 runner 已由使用者明確啟動，目前進行 Phase 3A Controlled Bug-fix / Patch-first。
 
 ```text
-docs/prompts/run-phase-3-autonomous.md
+FW-P3A-004：command runner skeleton
 ```
 
-本次執行不自動進入 Phase 3。
+Phase 3 完成後停止，不自動進入 Phase 4。

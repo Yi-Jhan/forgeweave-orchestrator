@@ -73,3 +73,22 @@ export {
   type ReviewDecisionInput,
   type ReviewDecisionResult
 } from "./review-decision.js";
+export {
+  createControlledWorkdir,
+  type ControlledWorkdir,
+  type CreateControlledWorkdirOptions
+} from "./workdir-manager.js";
+export {
+  defaultFilePolicy,
+  evaluateDirtyState,
+  evaluateFilePolicy,
+  inspectGitProvenance,
+  normalizeRelativePath,
+  resolveInside,
+  type DirtyStateEvaluation,
+  type FileChangeRequest,
+  type FileOperation,
+  type FilePolicy,
+  type FilePolicyEvaluation,
+  type GitProvenance
+} from "./write-safety.js";

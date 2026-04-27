@@ -63,8 +63,8 @@ Phase 3 分成 3A 與 3B。
 
 ### Phase 3A — Controlled Bug-fix / Patch-first
 
-- [ ] workdir manager、branch guard、dirty-state guard 可用。
-- [ ] file allowlist / denylist 可阻擋越界寫入。
+- [x] workdir manager、branch guard、dirty-state guard 可用。
+- [x] file allowlist / denylist 可阻擋越界寫入。
 - [ ] command runner 與 command allowlist 可用。
 - [ ] `generic.bug-fix` 可產生 patch / diff / file-change-set。
 - [ ] validation command 產生 command-summary。

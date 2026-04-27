@@ -70,9 +70,9 @@
 
 | ID | Slice | 任務 | 依賴 | 驗收重點 | 狀態 |
 | --- | --- | --- | --- | --- | --- |
-| FW-P3A-001 | Write Safety | 實作 workdir manager | FW-P2-013 | controlled workdir/branch provenance | Todo |
-| FW-P3A-002 | Write Safety | 實作 branch / dirty-state guard | FW-P3A-001 | dirty state 依 policy 阻擋或警告 | Todo |
-| FW-P3A-003 | File Policy | 實作 file allowlist / denylist | FW-P3A-001 | 越界寫入被阻擋且記錄 | Todo |
+| FW-P3A-001 | Write Safety | 實作 workdir manager | FW-P2-013 | controlled workdir/branch provenance | Committed |
+| FW-P3A-002 | Write Safety | 實作 branch / dirty-state guard | FW-P3A-001 | dirty state 依 policy 阻擋或警告 | Committed |
+| FW-P3A-003 | File Policy | 實作 file allowlist / denylist | FW-P3A-001 | 越界寫入被阻擋且記錄 | Committed |
 | FW-P3A-004 | Command Runner | 實作 command runner skeleton | FW-P2-005 | allowed/blocked/timeout/fail captured as command-summary | Todo |
 | FW-P3A-005 | Command Policy | 實作 command allowlist | FW-P3A-004 | 僅允許 manifest-approved lint/test/build | Todo |
 | FW-P3A-006 | Patch Contracts | 定義 bug-brief / patch-plan / file-change-set schema | FW-P2-002 | changed files、hunks、rationale、risk | Todo |

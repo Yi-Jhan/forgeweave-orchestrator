@@ -2,9 +2,19 @@
 
 ## Active Focus
 
-- Phase：Phase 2 — Review-first MVP
-- Task：Phase 2 final gate cleanup（完成）
+- Phase：Phase 3 — Feature Delivery MVP
+- Task：FW-P3A-001 / FW-P3A-002 / FW-P3A-003（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P3A-001 / FW-P3A-002 / FW-P3A-003
+
+- 目標：建立 Phase 3 workspace-write 的安全底座，包含 controlled workdir provenance、branch / dirty-state guard，以及 file allowlist / denylist policy。
+- Acceptance criteria：可建立隔離 controlled workdir；可記錄 source root、workdir root、branch / head / dirty-state provenance；live-patch dirty state 會阻擋，fixture dirty state 只記錄 warning；越界、denylist、path traversal、未 allowlist 的檔案變更會被阻擋且回傳 reject reason。
+- 預期修改檔案：`packages/core/src/index.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`packages/core/src/workdir-manager.ts`、`packages/core/src/write-safety.ts`、`packages/core/src/write-safety.test.ts`。
+- Non-goals：不實作 patch/diff capture；不執行 lint/test/build command；不定義 bug-fix workflow；不寫入真實 ACC repo。
+- Checks / tests：`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`；`git diff --check`。
+- 風險與避免方式：測試使用 temp directory，避免在 fixture source 旁產生 artifacts；branch dirty 檢查對 fixture mode 只警告，避免 repo 本身施工中的 dirty state 阻擋 fixture tests。
 
 ## Phase 2 Final Gate
 
@@ -167,6 +177,9 @@
 
 ## Completed
 
+- FW-P3A-001：新增 controlled workdir manager，會複製到 output root 下的隔離 workdir，並記錄 source/workdir/provenance。
+- FW-P3A-002：新增 branch / dirty-state guard；live-patch dirty state 會阻擋，fixture dirty state 會記錄 warning。
+- FW-P3A-003：新增 file allowlist / denylist policy，阻擋越界、denylist、未 allowlist 與未允許的新檔。
 - FW-P2-001：新增 workflow definition schema、type 與 validation helper。
 - FW-P2-002：新增 workflow artifact schema、type 與 validation helper。
 - FW-P2-003：新增最小 run/step state machine，含 legal / illegal transition tests。
@@ -277,6 +290,8 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm --filter @forgeweave/core test` | Pass | Phase 3A write safety guard tests 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | workdir manager / write-safety exports build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 2 workflow/artifact/event/review artifact schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | Phase 2 state machine tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | contracts 新 export build 通過。 |
@@ -358,6 +373,9 @@
 - [x] FW-P2-013 acceptance criteria
 - [x] FW-P2-014 acceptance criteria
 - [x] FW-P2-015 acceptance criteria
+- [x] FW-P3A-001 acceptance criteria
+- [x] FW-P3A-002 acceptance criteria
+- [x] FW-P3A-003 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -392,12 +410,13 @@
 
 ## Next Task
 
-- Phase 2 completed；停止，不自動進入 Phase 3
+- FW-P3A-004：實作 command runner skeleton
 
 ## Commit Message
 
 ```text
 phase-2: complete review-first gate
+phase-3: FW-P3A-001-003 add write safety guards
 phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store
