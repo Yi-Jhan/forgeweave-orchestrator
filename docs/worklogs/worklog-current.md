@@ -2,9 +2,19 @@
 
 ## Active Focus
 
-- Phase：Phase 0 — Foundation / Repo Scaffold
-- Task：FW-P0-008 — 建立 ACC 與 minimal-project fixture shell（完成）
+- Phase：Phase 1 — Project Onboarding MVP
+- Task：FW-P1-001 / FW-P1-006 / FW-P1-009 — Phase 1 contracts schema cluster（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P1-001 / FW-P1-006 / FW-P1-009
+
+- 目標：定義 Phase 1 onboarding 所需的 project manifest、provider asset profile、provider preflight report contracts，並提供基本 validation helpers。
+- Acceptance criteria：manifest valid/invalid fixture 可驗證；github_copilot / generic_agent 類型 asset profile shape 可驗證；provider-preflight-report 能捕捉 capabilities、missing features、degraded modes。
+- 預期修改檔案：`packages/contracts/src/index.ts`、`packages/contracts/package.json`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`。
+- 預期新增檔案：`packages/contracts/src/schemas/project-manifest.ts`、`packages/contracts/src/schemas/provider-asset-profile.ts`、`packages/contracts/src/schemas/provider-preflight-report.ts`、`packages/contracts/src/schemas/phase-1-contracts.test.ts`。
+- Non-goals：不實作 manifest loader；不實作 CLI init；不建立 workflow runner 或 Phase 2 artifact/state contracts。
+- Checks / tests：`pnpm --filter @forgeweave/contracts test`；`pnpm --filter @forgeweave/contracts build`。
+- 風險與避免方式：避免 schema 過度承諾未來 Phase；只納入 Phase 1 gate 明確要求的欄位與 deterministic validation。
 
 ## Task Execution Plan — FW-P0-001
 
@@ -88,6 +98,9 @@
 
 ## Completed
 
+- FW-P1-001：新增 project manifest schema、type 與 validation helper。
+- FW-P1-006：新增 provider asset profile schema、type 與 validation helper。
+- FW-P1-009：新增 provider-preflight-report schema、type 與 validation helper。
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
 - FW-P0-002：加入 TypeScript / Vitest baseline，建立 `@forgeweave/core` 最小可編譯 package。
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
@@ -99,6 +112,12 @@
 
 ## Changed Files
 
+- `packages/contracts/src/schemas/project-manifest.ts`
+- `packages/contracts/src/schemas/provider-asset-profile.ts`
+- `packages/contracts/src/schemas/provider-preflight-report.ts`
+- `packages/contracts/src/schemas/phase-1-contracts.test.ts`
+- `packages/contracts/src/index.ts`
+- `packages/contracts/package.json`
 - `package.json`
 - `pnpm-workspace.yaml`
 - `apps/cli/.gitkeep`
@@ -146,6 +165,8 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
+| `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
 | `pnpm install --lockfile-only` | Pass | 無 dependencies，未產生 lockfile。 |
 | `pnpm build` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
 | `pnpm test` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
@@ -180,6 +201,9 @@
 
 ## Acceptance Criteria Status
 
+- [x] FW-P1-001 acceptance criteria
+- [x] FW-P1-006 acceptance criteria
+- [x] FW-P1-009 acceptance criteria
 - [x] FW-P0-001 acceptance criteria
 - [x] FW-P0-002 acceptance criteria
 - [x] FW-P0-003 acceptance criteria
@@ -199,7 +223,7 @@
 
 ## Next Task
 
-- Phase 0 completed；停止，不自動進入 Phase 1
+- FW-P1-002 — manifest loader / normalizer
 
 ## Commit Message
 
@@ -212,4 +236,5 @@ phase-0: FW-P0-005 add test harness
 phase-0: FW-P0-006 add runtime fixture layout
 phase-0: FW-P0-007 add task status flow docs
 phase-0: FW-P0-008 add reference fixture shells
+phase-1: FW-P1-contracts add onboarding schemas
 ```

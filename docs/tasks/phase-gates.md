@@ -28,7 +28,7 @@
 
 - [ ] `forgeweave init` 可對 `examples/acc` 執行。
 - [ ] `forgeweave init` 可對 `examples/minimal-project` 執行。
-- [ ] project manifest schema 可驗證 fixture manifests。
+- [x] project manifest schema 可驗證 fixture manifests。
 - [ ] manifest loader / normalizer 可用。
 - [ ] GenericProjectAdapter / project detector 可產出 project signals。
 - [ ] provider asset discovery / gap analysis 可用。

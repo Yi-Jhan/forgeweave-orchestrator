@@ -28,15 +28,15 @@
 
 | ID | Slice | 任務 | 依賴 | 驗收重點 | 狀態 |
 | --- | --- | --- | --- | --- | --- |
-| FW-P1-001 | Manifest | 定義 project manifest schema | FW-P0-003 | valid/invalid fixtures 可驗證 | Todo |
+| FW-P1-001 | Manifest | 定義 project manifest schema | FW-P0-003 | valid/invalid fixtures 可驗證 | Committed |
 | FW-P1-002 | Manifest | 實作 manifest loader / normalizer | FW-P1-001 | 可找 manifest、套 defaults、輸出清楚錯誤 | Todo |
 | FW-P1-003 | CLI Init | 實作 `forgeweave init` | FW-P0-004, FW-P1-001 | dry-run/fixture init 不覆蓋既有檔案 | Todo |
 | FW-P1-004 | Detector | 實作 generic project detector | FW-P1-002 | 偵測語言、package manager、framework、source/test roots | Todo |
 | FW-P1-005 | Adapter | 實作 adapter recommendation report | FW-P1-004 | 推薦 Generic/Framework/Project adapter 並說明缺口 | Todo |
-| FW-P1-006 | Asset Profile | 定義 provider asset profile schema | FW-P1-001 | github_copilot / generic_agent fixtures 可驗證 | Todo |
+| FW-P1-006 | Asset Profile | 定義 provider asset profile schema | FW-P1-001 | github_copilot / generic_agent fixtures 可驗證 | Committed |
 | FW-P1-007 | Asset Resolver | 實作 provider asset resolver | FW-P1-006 | 掃描 instructions/agents/skills/workflows 與缺口 | Todo |
 | FW-P1-008 | Context Packet | 建立 simple context packet generator | FW-P1-004, FW-P1-007 | 包含 signals、commands、target files、assets、risks、budget | Todo |
-| FW-P1-009 | Preflight | 定義 provider-preflight-report schema | FW-P0-003 | 捕捉 capabilities、missing features、degraded modes | Todo |
+| FW-P1-009 | Preflight | 定義 provider-preflight-report schema | FW-P0-003 | 捕捉 capabilities、missing features、degraded modes | Committed |
 | FW-P1-010 | Preflight | 實作 mock provider preflight | FW-P1-009 | deterministic pass/degraded/fail fixture | Todo |
 | FW-P1-011 | Matrix | 建立 provider capability matrix v0 | FW-P1-009, FW-P1-010 | streaming/session/hooks/skills/tool-events support level | Todo |
 | FW-P1-012 | Report | 產出 onboarding report artifact | FW-P1-005, FW-P1-008, FW-P1-011 | manifest、adapter、asset gaps、provider gaps、next workflows | Todo |

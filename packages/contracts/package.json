@@ -11,6 +11,6 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run src/schemas/base-contract.test.ts"
+    "test": "vitest run --root ../.. packages/contracts/src/schemas"
   }
 }
