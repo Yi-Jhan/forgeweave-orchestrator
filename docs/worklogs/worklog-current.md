@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 2 — Review-first MVP
-- Task：FW-P2-005 — local JSON/JSONL artifact/event store（完成）
+- Task：FW-P2-007 / FW-P2-009 / FW-P2-010 / FW-P2-013 — mock runtime、runner、generic.review、read-only guard（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P2-007 / FW-P2-009 / FW-P2-010 / FW-P2-013
+
+- 目標：建立 deterministic MockRuntimeProvider、workflow runner skeleton、`generic.review` workflow，並在 runner 層強制 Phase 2 read-only isolation。
+- Acceptance criteria：mock runtime 產生 deterministic review findings；runner 可處理 system / agent / human-review step lifecycle；`generic.review` 可執行 load project → context → review-findings → review gate；read-only guard 可阻擋非 read-only workflow；ACC fixture 與 minimal-project fixture 不依賴 ACC-specific runner logic。
+- 預期修改檔案：`packages/core/src/index.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`packages/core/src/workflows/generic-review.ts`、`packages/core/src/mock-runtime-provider.ts`、`packages/core/src/workflow-runner.ts`、`packages/core/src/workflow-runner.test.ts`。
+- Non-goals：不實作 CLI approve/reject；不實作 Phase 3 patch/write mode；不寫入 reference project source；不實作 resume/retry。
+- Checks / tests：`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`。
+- 風險與避免方式：避免 runner 對 fixture project 產生 `.forgeweave` source-side output；測試使用 temp output root 並確認 fixture root 沒有 `.forgeweave`。
 
 ## Task Execution Plan — FW-P2-005
 
@@ -144,7 +154,11 @@
 - FW-P2-004：新增 workflow event envelope schema、type 與 validation helper。
 - FW-P2-005：新增 local JSON/JSONL workflow store，可保存 run、step、artifact、event 與 review decision metadata。
 - FW-P2-006：新增 AgentRuntimeProvider contract v0，支援 createSession、runStep、optional resume/close。
+- FW-P2-007：新增 deterministic MockRuntimeProvider review fixture。
 - FW-P2-008：新增 review-findings 與 delivery-summary schema、type 與 validation helper。
+- FW-P2-009：新增 workflow runner skeleton，支援 system、agent、human-review step lifecycle。
+- FW-P2-010：新增 `generic.review` workflow definition，串接 project context、review findings 與 manual review gate。
+- FW-P2-013：新增 Phase 2 read-only guard，阻擋 workspace-write policy 或非 read-only step。
 - FW-P1-001：新增 project manifest schema、type 與 validation helper。
 - FW-P1-002：新增 manifest finder / loader / normalizer，支援 fixture YAML manifest。
 - FW-P1-003：新增 `forgeweave init` CLI onboarding flow，支援 `--project-root`、`--dry-run`、`--write`。
@@ -246,6 +260,8 @@
 | `pnpm --filter @forgeweave/core build` | Pass | core state/runtime contract export build 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | local workflow store persistence test 通過。 |
 | `pnpm --filter @forgeweave/core build` | Pass | local store export build 通過。 |
+| `pnpm --filter @forgeweave/core test` | Pass | `generic.review` ACC/minimal fixture runner tests 與 read-only guard test 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | mock runtime、runner、workflow exports build 通過。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
 | `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
@@ -298,7 +314,11 @@
 - [x] FW-P2-004 acceptance criteria
 - [x] FW-P2-005 acceptance criteria
 - [x] FW-P2-006 acceptance criteria
+- [x] FW-P2-007 acceptance criteria
 - [x] FW-P2-008 acceptance criteria
+- [x] FW-P2-009 acceptance criteria
+- [x] FW-P2-010 acceptance criteria
+- [x] FW-P2-013 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -333,11 +353,12 @@
 
 ## Next Task
 
-- FW-P2-007 / FW-P2-009 / FW-P2-010：MockRuntimeProvider、workflow runner skeleton、`generic.review` workflow
+- FW-P2-011 / FW-P2-012：CLI approve/reject review gate 與 run/status/artifacts inspect commands
 
 ## Commit Message
 
 ```text
+phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store
 phase-2: FW-P2-contracts add review workflow contracts
 phase-0: FW-P0-001 initialize monorepo baseline

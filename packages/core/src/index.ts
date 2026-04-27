@@ -57,3 +57,14 @@ export {
   type LocalWorkflowStore,
   type ReviewDecisionRecord
 } from "./local-store.js";
+export {
+  createMockRuntimeProvider
+} from "./mock-runtime-provider.js";
+export {
+  runWorkflow,
+  type RunWorkflowOptions,
+  type RunWorkflowResult
+} from "./workflow-runner.js";
+export {
+  genericReviewWorkflow
+} from "./workflows/generic-review.js";
