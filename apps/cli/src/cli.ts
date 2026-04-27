@@ -1,5 +1,13 @@
 import { VERSION } from "./version.js";
-import { createLocalWorkflowStore, recordReviewDecision, runProjectOnboarding, runWorkflow } from "@forgeweave/core";
+import {
+  createLocalWorkflowStore,
+  genericBugFixWorkflow,
+  recordReviewDecision,
+  rerunRejectedStep,
+  runProjectOnboarding,
+  runWorkflow,
+  suggestRerunStep
+} from "@forgeweave/core";
 
 export type CliIo = {
   stdout: (message: string) => void;
@@ -17,6 +25,7 @@ Commands:
   status     Inspect a persisted workflow run
   artifacts  List persisted workflow artifacts for a run
   review     Approve or reject a waiting manual review gate
+  rerun      Rerun a rejected run step using the saved reject reason
   version    Show the CLI version
 
 Options:
@@ -32,6 +41,8 @@ Review workflow options:
   --project-root <path>  Project root to inspect (defaults to current working directory)
   --output-root <path>   Local ForgeWeave artifact output root
   --run-id <id>          Run id to create or inspect
+  --brief <text>         Bug brief or requirement text for patch workflows
+  --target-file <path>   Relative target file for controlled patch workflows
   --reason <text>        Required rejection reason`;
 
 export function renderHelp(): string {
@@ -82,14 +93,21 @@ function requiredOption(argv: readonly string[], option: string): string {
 
 async function renderRunSummary(argv: readonly string[]): Promise<string> {
   const [workflowId] = argv;
-  if (workflowId !== "generic.review") {
+  if (workflowId !== "generic.review" && workflowId !== "generic.bug-fix") {
     throw new Error(`Unsupported workflow: ${workflowId ?? "<missing>"}`);
   }
 
   const projectRoot = optionValue(argv, "--project-root") ?? process.cwd();
   const outputRoot = requiredOption(argv, "--output-root");
   const runId = optionValue(argv, "--run-id");
-  const result = await runWorkflow({ projectRoot, outputRoot, runId });
+  const result = await runWorkflow({
+    projectRoot,
+    outputRoot,
+    runId,
+    workflow: workflowId === "generic.bug-fix" ? genericBugFixWorkflow : undefined,
+    brief: optionValue(argv, "--brief"),
+    targetFile: optionValue(argv, "--target-file")
+  });
 
   return [
     `Run: ${result.run.runId}`,
@@ -107,14 +125,25 @@ function renderStatusSummary(argv: readonly string[]): string {
   const run = store.loadRun(runId);
   const steps = store.loadSteps(runId);
   const reviewDecision = store.loadReviewDecision(runId);
+  const artifacts = store.listArtifacts(runId);
+  const failedSteps = steps.filter((step) => step.status === "failed").map((step) => step.stepId);
+  const recovery =
+    run.status === "rejected" && reviewDecision.reason !== undefined
+      ? `Recovery: forgeweave rerun --output-root ${outputRoot} --run-id ${runId} --step-id ${suggestRerunStep(reviewDecision.reason)}`
+      : undefined;
 
   return [
     `Run: ${run.runId}`,
     `Workflow: ${run.workflowId}`,
     `Status: ${run.status}`,
     `Steps: ${steps.map((step) => `${step.stepId}:${step.status}`).join(", ")}`,
-    `Review decision: ${reviewDecision.status}${reviewDecision.reason ? ` (${reviewDecision.reason})` : ""}`
-  ].join("\n");
+    `Review decision: ${reviewDecision.status}${reviewDecision.reason ? ` (${reviewDecision.reason})` : ""}`,
+    `Artifacts: ${artifacts.map((artifact) => `${artifact.artifactId}:${artifact.kind}`).join(", ")}`,
+    failedSteps.length > 0 ? `Failed steps: ${failedSteps.join(", ")}` : undefined,
+    recovery
+  ]
+    .filter((line): line is string => line !== undefined)
+    .join("\n");
 }
 
 function renderArtifactsSummary(argv: readonly string[]): string {
@@ -149,6 +178,20 @@ function renderReviewSummary(argv: readonly string[]): string {
     `Run: ${runId}`,
     `Status: ${result.runStatus}`,
     `Review decision: ${result.decision.status}${result.decision.reason ? ` (${result.decision.reason})` : ""}`
+  ].join("\n");
+}
+
+function renderRerunSummary(argv: readonly string[]): string {
+  const outputRoot = requiredOption(argv, "--output-root");
+  const runId = requiredOption(argv, "--run-id");
+  const stepId = optionValue(argv, "--step-id");
+  const result = rerunRejectedStep({ outputRoot, runId, stepId });
+
+  return [
+    `Run: ${result.runId}`,
+    `Rerun step: ${result.stepId}`,
+    `Reject reason: ${result.rejectReason}`,
+    `Artifacts: ${result.artifacts.map((artifact) => `${artifact.artifactId}:${artifact.kind}`).join(", ")}`
   ].join("\n");
 }
 
@@ -211,6 +254,16 @@ export async function runCli(
   if (command === "review") {
     try {
       io.stdout(renderReviewSummary(argv.slice(1)));
+      return 0;
+    } catch (error) {
+      io.stderr(error instanceof Error ? error.message : String(error));
+      return 1;
+    }
+  }
+
+  if (command === "rerun") {
+    try {
+      io.stdout(renderRerunSummary(argv.slice(1)));
       return 0;
     } catch (error) {
       io.stderr(error instanceof Error ? error.message : String(error));

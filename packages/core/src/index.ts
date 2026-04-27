@@ -91,6 +91,12 @@ export {
   type ReviewDecisionResult
 } from "./review-decision.js";
 export {
+  rerunRejectedStep,
+  suggestRerunStep,
+  type RerunRejectedStepOptions,
+  type RerunRejectedStepResult
+} from "./rerun.js";
+export {
   createControlledWorkdir,
   type ControlledWorkdir,
   type CreateControlledWorkdirOptions

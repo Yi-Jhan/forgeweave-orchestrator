@@ -98,4 +98,53 @@ describe("forgeweave CLI skeleton", () => {
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Review decision: rejected (Needs more detail)"));
     expect(stderr).not.toHaveBeenCalled();
   });
+
+  it("runs ACC fixture generic.bug-fix and reruns validation after rejection", async () => {
+    const { mkdtempSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const outputRoot = mkdtempSync(join(tmpdir(), "forgeweave-cli-bugfix-"));
+    const stdout = vi.fn();
+    const stderr = vi.fn();
+
+    await expect(
+      runCli(
+        [
+          "run",
+          "generic.bug-fix",
+          "--project-root",
+          accFixtureRoot,
+          "--output-root",
+          outputRoot,
+          "--run-id",
+          "acc-bug",
+          "--brief",
+          "Fix stale status card label."
+        ],
+        { stdout, stderr }
+      )
+    ).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Workflow: generic.bug-fix"));
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Status: waiting-review"));
+
+    await expect(runCli(["artifacts", "--output-root", outputRoot, "--run-id", "acc-bug"], { stdout, stderr })).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("file-change-set"));
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("command-summary"));
+
+    await expect(
+      runCli(
+        ["review", "reject", "--output-root", outputRoot, "--run-id", "acc-bug", "--reason", "Please rerun validation commands."],
+        { stdout, stderr }
+      )
+    ).resolves.toBe(0);
+    await expect(runCli(["status", "--output-root", outputRoot, "--run-id", "acc-bug"], { stdout, stderr })).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Recovery: forgeweave rerun"));
+
+    await expect(
+      runCli(["rerun", "--output-root", outputRoot, "--run-id", "acc-bug", "--step-id", "validate"], { stdout, stderr })
+    ).resolves.toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("Reject reason: Please rerun validation commands."));
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("rerun-summary"));
+    expect(stderr).not.toHaveBeenCalled();
+  });
 });

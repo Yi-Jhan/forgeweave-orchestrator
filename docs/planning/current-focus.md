@@ -2,7 +2,7 @@
 
 ## Active Phase
 
-Phase 3 — Feature Delivery MVP（in progress）
+Phase 3 — Feature Delivery MVP（Phase 3B in progress）
 
 ## Active Validation Mode
 
@@ -20,10 +20,10 @@ fixture
 
 ## 下一步
 
-Phase 2 Review-first MVP 已完成。Phase 3 runner 已由使用者明確啟動，目前進行 Phase 3A Controlled Bug-fix / Patch-first。
+Phase 2 Review-first MVP 已完成。Phase 3A Controlled Bug-fix / Patch-first 已完成，目前進行 Phase 3B Small New-feature / Enhancement。
 
 ```text
-FW-P3A-010：reject reason propagation
+FW-P3B-001：feature delivery contracts
 ```
 
 Phase 3 完成後停止，不自動進入 Phase 4。

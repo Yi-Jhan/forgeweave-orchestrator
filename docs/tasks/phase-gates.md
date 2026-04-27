@@ -68,7 +68,7 @@ Phase 3 分成 3A 與 3B。
 - [x] command runner 與 command allowlist 可用。
 - [x] `generic.bug-fix` 可產生 patch / diff / file-change-set。
 - [x] validation command 產生 command-summary。
-- [ ] reject reason 可重跑 implementation 或 validation step。
+- [x] reject reason 可重跑 implementation 或 validation step。
 
 ### Phase 3B — Small New-feature / Enhancement
 

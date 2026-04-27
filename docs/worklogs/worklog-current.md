@@ -3,8 +3,18 @@
 ## Active Focus
 
 - Phase：Phase 3 — Feature Delivery MVP
-- Task：FW-P3A-004 / FW-P3A-005 / FW-P3A-006 / FW-P3A-007 / FW-P3A-008 / FW-P3A-009（完成）
+- Task：FW-P3A-010 / FW-P3A-011 / FW-P3A-012（完成）
 - Validation Mode：fixture
+
+## Task Execution Plan — FW-P3A-010 / FW-P3A-011 / FW-P3A-012
+
+- 目標：完成 Phase 3A patch-first bug-fix 收尾，讓 reject reason 能傳遞到指定 step rerun，CLI 能顯示 failure / recovery 建議，並以 ACC fixture 跑通小 bug-fix patch-run E2E。
+- Acceptance criteria：review reject reason 可保存並被 rerun 使用；可不重跑整個 run 而 rerun `validate` step 並產生新的 command-summary / rerun-summary artifacts；CLI status 顯示 failed step、reject reason、artifacts 與 rerun 建議；CLI `run generic.bug-fix` 可在 ACC fixture 產生 diff、command-summary、review gate、delivery summary；CLI smoke / tests 覆蓋此流程。
+- 預期修改檔案：`apps/cli/src/cli.ts`、`apps/cli/src/cli.test.ts`、`packages/core/src/index.ts`、`packages/core/src/review-decision.ts`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`。
+- 預期新增檔案：`packages/core/src/rerun.ts`、`packages/core/src/rerun.test.ts`、`examples/acc/fixtures/modern-target/status-card.ts`。
+- Non-goals：不實作 Phase 4 checkpoint / full resume state machine；不自動 approve review；不寫入真實 ACC repo；不做 ACC migration。
+- Checks / tests：`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/cli test`；`pnpm --filter @forgeweave/core build`；`pnpm --filter @forgeweave/cli build`；`pnpm test:smoke`；`git diff --check`。
+- 風險與避免方式：rerun 僅在 rejected run 上開放，並要求既有 workdir-provenance artifact；CLI 僅操作 outputRoot artifacts，不回寫 source fixture。
 
 ## Task Execution Plan — FW-P3A-004 / FW-P3A-005 / FW-P3A-006 / FW-P3A-007 / FW-P3A-008 / FW-P3A-009
 
@@ -187,6 +197,9 @@
 
 ## Completed
 
+- FW-P3A-010：新增 rejected run 的 targeted validate rerun，會帶入 reject reason 並產出新的 command-summary / rerun-summary artifacts。
+- FW-P3A-011：CLI `status` 顯示 artifacts、failed step、reject reason 與 rerun 建議；新增 CLI `rerun` command。
+- FW-P3A-012：ACC fixture `generic.bug-fix` CLI E2E 通過，可產生 diff、command-summary、review gate 與 delivery summary。
 - FW-P3A-004：新增 command runner skeleton，可捕捉 passed / failed / blocked / skipped / timed-out command records。
 - FW-P3A-005：新增 command allowlist policy，只允許 manifest-approved lint / test / build；其他 command 會被 blocked。
 - FW-P3A-006：新增 bug-brief、patch-plan、file-change-set、command-summary contracts 與 validation tests。
@@ -306,6 +319,12 @@
 
 | Command | Result | Notes |
 | --- | --- | --- |
+| `pnpm --filter @forgeweave/core test` | Pass | reject reason rerun tests 通過。 |
+| `pnpm --filter @forgeweave/cli test` | Pass | ACC fixture `generic.bug-fix` + reject/rerun CLI E2E 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | rerun export build 通過。 |
+| `pnpm --filter @forgeweave/cli build` | Pass | core build 完成後重跑 CLI build 通過。 |
+| `pnpm test:smoke` | Pass | CLI help/version/init smoke 通過，help 已列出 rerun command。 |
+| build CLI `generic.bug-fix` ACC fixture smoke | Pass | temp output root 產生 8 個 artifacts：context、workdir、bug-brief、patch-plan、file-change-set、command-summary、review-findings、delivery-summary。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 3 patch / command contracts tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | workflow definition controlled workspace-write type build 通過。 |
 | `pnpm --filter @forgeweave/core test` | Pass | command runner、diff capture、generic.bug-fix workflow tests 通過。 |
@@ -402,6 +421,9 @@
 - [x] FW-P3A-007 acceptance criteria
 - [x] FW-P3A-008 acceptance criteria
 - [x] FW-P3A-009 acceptance criteria
+- [x] FW-P3A-010 acceptance criteria
+- [x] FW-P3A-011 acceptance criteria
+- [x] FW-P3A-012 acceptance criteria
 - [x] FW-P1-001 acceptance criteria
 - [x] FW-P1-002 acceptance criteria
 - [x] FW-P1-003 acceptance criteria
@@ -436,7 +458,7 @@
 
 ## Next Task
 
-- FW-P3A-010：實作 reject reason propagation
+- FW-P3B-001：定義 requirement-brief / feature-spec / implementation-plan schema
 
 ## Commit Message
 
@@ -444,6 +466,7 @@
 phase-2: complete review-first gate
 phase-3: FW-P3A-001-003 add write safety guards
 phase-3: FW-P3A-004-009 add bug-fix patch workflow
+phase-3: FW-P3A-010-012 add bug-fix CLI recovery
 phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store
