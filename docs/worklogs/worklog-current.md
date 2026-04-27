@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 1 — Project Onboarding MVP
-- Task：FW-P1-001 / FW-P1-006 / FW-P1-009 — Phase 1 contracts schema cluster（完成）
+- Task：FW-P1-002 / FW-P1-004 / FW-P1-005 / FW-P1-007 / FW-P1-008 / FW-P1-010 / FW-P1-011 / FW-P1-012 — Phase 1 onboarding core cluster（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P1-001 / FW-P1-006 / FW-P1-009
@@ -15,6 +15,16 @@
 - Non-goals：不實作 manifest loader；不實作 CLI init；不建立 workflow runner 或 Phase 2 artifact/state contracts。
 - Checks / tests：`pnpm --filter @forgeweave/contracts test`；`pnpm --filter @forgeweave/contracts build`。
 - 風險與避免方式：避免 schema 過度承諾未來 Phase；只納入 Phase 1 gate 明確要求的欄位與 deterministic validation。
+
+## Task Execution Plan — FW-P1-002 / FW-P1-004 / FW-P1-005 / FW-P1-007 / FW-P1-008 / FW-P1-010 / FW-P1-011 / FW-P1-012
+
+- 目標：建立 Phase 1 onboarding core pipeline，從 manifest 載入與 normalize 到 project signals、adapter recommendation、asset gaps、context packet、mock preflight、capability matrix 與 onboarding report。
+- Acceptance criteria：fixture manifests 可被載入並套 defaults；ACC 與 minimal-project 可產出 signals / adapter recommendation / asset gap / context packet / preflight / matrix / report；mock preflight 有 deterministic pass/degraded/fail。
+- 預期修改檔案：`packages/core/package.json`、`packages/core/tsconfig.json`、`packages/core/src/index.ts`、`pnpm-lock.yaml`、`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`、`docs/tasks/phase-gates.md`。
+- 預期新增檔案：`packages/core/src/manifest.ts`、`packages/core/src/project-detector.ts`、`packages/core/src/adapter-recommendation.ts`、`packages/core/src/provider-assets.ts`、`packages/core/src/context-packet.ts`、`packages/core/src/provider-preflight.ts`、`packages/core/src/onboarding-report.ts`、`packages/core/src/phase-1-onboarding.test.ts`。
+- Non-goals：不實作 `generic.review` workflow；不做 workspace-write；不寫入真實 ACC repo；不實作完整 runtime provider。
+- Checks / tests：`pnpm install`；`pnpm --filter @forgeweave/core test`；`pnpm --filter @forgeweave/core build`。
+- 風險與避免方式：避免 onboarding core 綁死 ACC；minimal-project smoke test 驗證 GenericProjectAdapter path，ACC path 僅用 fixture profile 推薦 ProjectSpecificAdapter。
 
 ## Task Execution Plan — FW-P0-001
 
@@ -99,8 +109,16 @@
 ## Completed
 
 - FW-P1-001：新增 project manifest schema、type 與 validation helper。
+- FW-P1-002：新增 manifest finder / loader / normalizer，支援 fixture YAML manifest。
+- FW-P1-004：新增 generic project detector，產出 language、framework、package manager、source/test roots 與 command signals。
+- FW-P1-005：新增 adapter recommendation report，含推薦 adapter、理由與缺口。
 - FW-P1-006：新增 provider asset profile schema、type 與 validation helper。
+- FW-P1-007：新增 provider asset resolver 與 gap report。
+- FW-P1-008：新增 simple context packet generator。
 - FW-P1-009：新增 provider-preflight-report schema、type 與 validation helper。
+- FW-P1-010：新增 deterministic mock provider preflight。
+- FW-P1-011：新增 provider capability matrix v0。
+- FW-P1-012：新增 onboarding report artifact builder。
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
 - FW-P0-002：加入 TypeScript / Vitest baseline，建立 `@forgeweave/core` 最小可編譯 package。
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
@@ -118,6 +136,18 @@
 - `packages/contracts/src/schemas/phase-1-contracts.test.ts`
 - `packages/contracts/src/index.ts`
 - `packages/contracts/package.json`
+- `packages/core/src/manifest.ts`
+- `packages/core/src/project-detector.ts`
+- `packages/core/src/adapter-recommendation.ts`
+- `packages/core/src/provider-assets.ts`
+- `packages/core/src/context-packet.ts`
+- `packages/core/src/provider-preflight.ts`
+- `packages/core/src/onboarding-report.ts`
+- `packages/core/src/phase-1-onboarding.test.ts`
+- `packages/core/src/index.ts`
+- `packages/core/package.json`
+- `packages/core/tsconfig.json`
+- `pnpm-lock.yaml`
 - `package.json`
 - `pnpm-workspace.yaml`
 - `apps/cli/.gitkeep`
@@ -167,6 +197,9 @@
 | --- | --- | --- |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
+| `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
+| `pnpm --filter @forgeweave/core test` | Pass | ACC / minimal-project onboarding core fixture tests 通過。 |
+| `pnpm --filter @forgeweave/core build` | Pass | core onboarding API TypeScript build 通過。 |
 | `pnpm install --lockfile-only` | Pass | 無 dependencies，未產生 lockfile。 |
 | `pnpm build` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
 | `pnpm test` | Pass | 目前尚無 workspace package manifest，`pnpm -r` 顯示 no projects matched。 |
@@ -202,8 +235,16 @@
 ## Acceptance Criteria Status
 
 - [x] FW-P1-001 acceptance criteria
+- [x] FW-P1-002 acceptance criteria
+- [x] FW-P1-004 acceptance criteria
+- [x] FW-P1-005 acceptance criteria
 - [x] FW-P1-006 acceptance criteria
+- [x] FW-P1-007 acceptance criteria
+- [x] FW-P1-008 acceptance criteria
 - [x] FW-P1-009 acceptance criteria
+- [x] FW-P1-010 acceptance criteria
+- [x] FW-P1-011 acceptance criteria
+- [x] FW-P1-012 acceptance criteria
 - [x] FW-P0-001 acceptance criteria
 - [x] FW-P0-002 acceptance criteria
 - [x] FW-P0-003 acceptance criteria
@@ -223,7 +264,7 @@
 
 ## Next Task
 
-- FW-P1-002 — manifest loader / normalizer
+- FW-P1-003 — `forgeweave init` CLI onboarding flow 與 fixture smoke tests
 
 ## Commit Message
 
@@ -237,4 +278,5 @@ phase-0: FW-P0-006 add runtime fixture layout
 phase-0: FW-P0-007 add task status flow docs
 phase-0: FW-P0-008 add reference fixture shells
 phase-1: FW-P1-contracts add onboarding schemas
+phase-1: FW-P1-core add onboarding pipeline
 ```

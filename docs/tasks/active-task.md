@@ -3,14 +3,14 @@
 ## 目前狀態
 
 - Active Phase：Phase 1 — Project Onboarding MVP
-- Active Task：FW-P1-002 — 實作 manifest loader / normalizer
+- Active Task：FW-P1-003 — 實作 `forgeweave init` CLI onboarding flow 與 fixture smoke tests
 - Validation Mode：fixture
 - ACC Live Root：由 `FORGEWEAVE_ACC_ROOT` 外部提供，目前未設定
 
 ## 最近一次 Codex 執行結果
 
-Phase 0 Gate 已通過。FW-P1-001、FW-P1-006、FW-P1-009 已完成 Phase 1 contracts schema cluster，包含 project manifest、provider asset profile 與 provider preflight report validation。
+Phase 0 Gate 已通過。Phase 1 contracts schema cluster 與 onboarding core cluster 已完成。core 現在可載入/normalize fixture manifests，產出 project signals、adapter recommendation、asset gaps、context packet、mock provider preflight、capability matrix v0 與 onboarding report。
 
 ## 下一步
 
-繼續 Phase 1 runner，下一步實作 manifest loader / normalizer 與 onboarding core。
+繼續 Phase 1 runner，下一步接上 `forgeweave init` CLI 與 fixture smoke tests。

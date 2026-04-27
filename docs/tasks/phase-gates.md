@@ -29,13 +29,13 @@
 - [ ] `forgeweave init` 可對 `examples/acc` 執行。
 - [ ] `forgeweave init` 可對 `examples/minimal-project` 執行。
 - [x] project manifest schema 可驗證 fixture manifests。
-- [ ] manifest loader / normalizer 可用。
-- [ ] GenericProjectAdapter / project detector 可產出 project signals。
-- [ ] provider asset discovery / gap analysis 可用。
-- [ ] provider preflight report 可產出。
-- [ ] provider capability matrix v0 可產出。
-- [ ] simple context packet 可產出。
-- [ ] onboarding report 可產出。
+- [x] manifest loader / normalizer 可用。
+- [x] GenericProjectAdapter / project detector 可產出 project signals。
+- [x] provider asset discovery / gap analysis 可用。
+- [x] provider preflight report 可產出。
+- [x] provider capability matrix v0 可產出。
+- [x] simple context packet 可產出。
+- [x] onboarding report 可產出。
 
 ### Optional Live ACC Validation Gate
 

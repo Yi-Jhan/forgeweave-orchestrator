@@ -12,6 +12,18 @@ importers:
       typescript: 6.0.3
       vitest: 4.1.5_@types+node@25.6.0
 
+  apps/cli:
+    specifiers: {}
+
+  packages/contracts:
+    specifiers: {}
+
+  packages/core:
+    specifiers:
+      '@forgeweave/contracts': workspace:*
+    dependencies:
+      '@forgeweave/contracts': link:../contracts
+
 packages:
 
   /@emnapi/core/1.10.0:
