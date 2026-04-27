@@ -3,7 +3,7 @@
 ## Active Focus
 
 - Phase：Phase 0 — Foundation / Repo Scaffold
-- Task：FW-P0-005 — 建立 unit / contract / smoke test harness（完成）
+- Task：FW-P0-006 — 建立本機 run/artifact fixture 目錄（完成）
 - Validation Mode：fixture
 
 ## Task Execution Plan — FW-P0-001
@@ -56,6 +56,16 @@
 - Checks / tests：`pnpm build`；`pnpm test`；`pnpm test:contract`；`pnpm test:cli`；`pnpm test:smoke`；lint N/A。
 - 風險與避免方式：避免 glob 在 Windows script 中失效；使用明確 test file path 作為 Phase 0 baseline。
 
+## Task Execution Plan — FW-P0-006
+
+- 目標：建立可被測試引用的 `.forgeweave` runtime fixture layout，作為後續 run/artifact/event storage 的安全殼。
+- Acceptance criteria：fixture 中存在 `.forgeweave/runs`、`.forgeweave/artifacts`、`.forgeweave/events`；root test 可驗證 layout；fixture 不依賴真實 ACC repo。
+- 預期修改檔案：`docs/worklogs/worklog-current.md`、`docs/tasks/active-task.md`、`docs/tasks/task-list.md`。
+- 預期新增檔案：`tests/fixtures/runtime/basic-project/README.md`、`tests/fixtures/runtime/basic-project/.forgeweave/README.md`、`.forgeweave/runs/.gitkeep`、`.forgeweave/artifacts/.gitkeep`、`.forgeweave/events/.gitkeep`、`tests/fixtures/runtime-layout.test.ts`。
+- Non-goals：不實作 storage API；不建立真實 runtime output；不寫入 repo root `.forgeweave`；不加入 Phase 2 state machine。
+- Checks / tests：`pnpm build`；`pnpm test`；`pnpm test:smoke`；fixture layout test。
+- 風險與避免方式：避免 fixture 被誤認為 live output；README 明確標示 sanitized fixture，且放在 `tests/fixtures`。
+
 ## Completed
 
 - FW-P0-001：建立 root `package.json`、`pnpm-workspace.yaml`、`apps/cli`、`packages/contracts`、`packages/core` 最小骨架。
@@ -63,6 +73,7 @@
 - FW-P0-003：建立 `@forgeweave/contracts` package skeleton、placeholder schema 與 validation test。
 - FW-P0-004：建立 `@forgeweave/cli` skeleton，支援 help/version 與 CLI smoke check。
 - FW-P0-005：建立 root Vitest config 與 unit / contract / CLI / smoke test scripts。
+- FW-P0-006：建立 `.forgeweave` runtime fixture layout 與 fixture layout test。
 
 ## Changed Files
 
@@ -92,6 +103,12 @@
 - `apps/cli/src/version.ts`
 - `apps/cli/src/cli.test.ts`
 - `vitest.config.ts`
+- `tests/fixtures/runtime/basic-project/README.md`
+- `tests/fixtures/runtime/basic-project/.forgeweave/README.md`
+- `tests/fixtures/runtime/basic-project/.forgeweave/runs/.gitkeep`
+- `tests/fixtures/runtime/basic-project/.forgeweave/artifacts/.gitkeep`
+- `tests/fixtures/runtime/basic-project/.forgeweave/events/.gitkeep`
+- `tests/fixtures/runtime-layout.test.ts`
 
 ## Commands / Checks
 
@@ -118,6 +135,9 @@
 | `pnpm test:cli` | Pass | CLI help/version unit test 通過。 |
 | `pnpm test:smoke` | Pass | CLI build 後執行 help/version smoke check。 |
 | lint | N/A | 尚未定義 lint script。 |
+| `pnpm build` | Pass | workspace build 通過。 |
+| `pnpm test` | Pass | 包含 runtime fixture layout test。 |
+| `pnpm test:smoke` | Pass | CLI help/version smoke check 通過。 |
 
 ## Acceptance Criteria Status
 
@@ -126,6 +146,7 @@
 - [x] FW-P0-003 acceptance criteria
 - [x] FW-P0-004 acceptance criteria
 - [x] FW-P0-005 acceptance criteria
+- [x] FW-P0-006 acceptance criteria
 
 ## Blocking Items
 
@@ -137,7 +158,7 @@
 
 ## Next Task
 
-- FW-P0-006 — 建立本機 run/artifact fixture 目錄
+- FW-P0-007 — 建立最小 docs/worklogs/task status 串接
 
 ## Commit Message
 
@@ -147,4 +168,5 @@ phase-0: FW-P0-002 add typescript tooling baseline
 phase-0: FW-P0-003 add contracts package skeleton
 phase-0: FW-P0-004 add cli skeleton
 phase-0: FW-P0-005 add test harness
+phase-0: FW-P0-006 add runtime fixture layout
 ```
