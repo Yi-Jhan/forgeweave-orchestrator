@@ -50,12 +50,12 @@
 
 ## Phase 2 — Review-first MVP
 
-- [ ] `generic.review` workflow 可在 ACC fixture 跑完。
-- [ ] `generic.review` workflow 可在第二專案 fixture 跑完。
-- [ ] review workflow 不允許寫檔。
-- [ ] review-findings 與 delivery-summary artifact 符合 schema。
-- [ ] manual review gate 可 approve / reject / reject with reason。
-- [ ] run / step / artifact / event / review decision 可保存。
+- [x] `generic.review` workflow 可在 ACC fixture 跑完。
+- [x] `generic.review` workflow 可在第二專案 fixture 跑完。
+- [x] review workflow 不允許寫檔。
+- [x] review-findings 與 delivery-summary artifact 符合 schema。
+- [x] manual review gate 可 approve / reject / reject with reason。
+- [x] run / step / artifact / event / review decision 可保存。
 
 ## Phase 3 — Feature Delivery MVP
 

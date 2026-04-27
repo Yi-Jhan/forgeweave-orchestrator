@@ -3,8 +3,17 @@
 ## Active Focus
 
 - Phase：Phase 2 — Review-first MVP
-- Task：FW-P2-011 / FW-P2-012 / FW-P2-014 / FW-P2-015 — CLI review gate、inspect commands、fixture E2E（完成）
+- Task：Phase 2 final gate cleanup（完成）
 - Validation Mode：fixture
+
+## Phase 2 Final Gate
+
+- [x] `generic.review` workflow 可在 ACC fixture 跑完。
+- [x] `generic.review` workflow 可在 minimal-project fixture 跑完。
+- [x] review workflow 不允許寫檔，runner 會阻擋非 read-only step 與 workspace-write policy。
+- [x] review-findings / delivery-summary 符合 schema。
+- [x] approve / reject / reject reason 可保存。
+- [x] run / step / artifact / event / review decision 可持久化。
 
 ## Task Execution Plan — FW-P2-011 / FW-P2-012 / FW-P2-014 / FW-P2-015
 
@@ -282,6 +291,12 @@
 | `pnpm --filter @forgeweave/cli build` | Pass | async CLI entrypoint build 通過。 |
 | `pnpm test:smoke` | Pass | CLI help/version/init smoke checks 通過，help 已列出 Phase 2 commands。 |
 | `pnpm build` | Pass | contracts、core、CLI workspace build 通過。 |
+| `pnpm build` | Pass | Phase 2 final gate workspace build 通過。 |
+| `pnpm test` | Pass | 11 test files / 32 tests 通過。 |
+| `pnpm test:contract` | Pass | 3 contract test files / 8 tests 通過。 |
+| `pnpm test:cli` | Pass | 1 CLI test file / 7 tests 通過。 |
+| `pnpm test:smoke` | Pass | CLI help/version/init smoke checks 通過。 |
+| lint | N/A | root `package.json` 尚未定義 lint script。 |
 | `pnpm --filter @forgeweave/contracts test` | Pass | Phase 1 schema validation tests 通過。 |
 | `pnpm --filter @forgeweave/contracts build` | Pass | Phase 1 contracts type export build 通過。 |
 | `pnpm install` | Pass | 建立 `@forgeweave/core` → `@forgeweave/contracts` workspace dependency link。 |
@@ -377,11 +392,12 @@
 
 ## Next Task
 
-- Phase 2 final gate cleanup：更新 phase gate / focus 並停止
+- Phase 2 completed；停止，不自動進入 Phase 3
 
 ## Commit Message
 
 ```text
+phase-2: complete review-first gate
 phase-2: FW-P2-cli add review commands
 phase-2: FW-P2-runner add generic review workflow
 phase-2: FW-P2-005 add local workflow store
